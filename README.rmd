@@ -1,12 +1,10 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: github_document
 ---
 
-# Purpose
+# Hannah's Data Science Exam
 
-Purpose of this work folder.
+The purpose of this ReadMe is to show my output and thinking from each question.
 
 Ideally store a minimum working example data set in data folder.
 
@@ -19,6 +17,16 @@ rm(list = ls()) # Clean your environment:
 gc() # garbage collection - It can be useful to call gc after a large object has been removed, as this may prompt R to return memory to the operating system.
 library(tidyverse)
 list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+
+
+# Texevier::create_template(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
+#                           template_name = "Q1",
+#                           build_project = T, open_project = T)
+# 
+# 
+# Texevier::create_template_html(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
+#                           template_name = "Q2",
+#                           build_project = T, open_project = T)
 ```
 
 
