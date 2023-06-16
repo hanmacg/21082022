@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: true
 ---
 
 # Hannah's Data Science Exam
@@ -78,6 +79,85 @@ source("Q1/code/plot_hospital_icu_data.R")
 source("Q1/code/plot_hospital_icu_data.R")
 globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
 globalp
+
+```
+
+# Question 2
+
+For London
+```{r}
+
+london_weather <- read_csv("Q2/data/london_weather.csv")
+london_weather$date <- as.character(london_weather$date)
+london_weather$date <- as.Date(london_weather$date, format = "%Y%m%d")
+london <- na.omit(london_weather)
+london$month <- format(london$date, "%Y-%m")
+london_filtered <- london[london$date >= as.Date("2019-01-01"), ]
+
+monthly_precipitation <- london_filtered %>%
+  group_by(month) %>%
+  summarize(total_precipitation = sum(precipitation, na.rm = TRUE))
+
+monthly_cloudy <- london_filtered %>%
+  group_by(month) %>%
+  summarize(avg_cloud = mean(cloud_cover, na.rm = TRUE))
+
+monthly_min_temp <- london_filtered %>%
+  group_by(month) %>%
+  summarize(min_temp = min(min_temp, na.rm = TRUE))
+
+source("Q2/code/plot_monthly_data.R")
+precip <- plot_monthly_data(monthly_precipitation, total_precipitation, " Total Precipitation")
+precip
+
+source("Q2/code/plot_monthly_data.R")
+cloud <- plot_monthly_data(monthly_cloudy, avg_cloud, "Average Cloudiness")
+cloud
+
+source("Q2/code/plot_monthly_data.R")
+cold <- plot_monthly_data(monthly_min_temp, min_temp, "Average Minimum Temp")
+cold
+
+```
+
+```{r}
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+london$year <- lubridate::year(london$date)
+source("Q2/code/generate_summary_stats.R")
+summary_table <- generate_summary_stats(london, "2015-01-01")
+print(summary_table)
+
+source("Q2/code/generate_summary_stats_extra.R")
+summary_table2 <- generate_summary_stats_extra(london, "2015-01-01")
+print(summary_table2)
+
+
+```
+
+
+For the UK in general
+```{r}
+
+UK <- read_csv("Q2/data/UKMonthly_Detailed.csv")
+UK$DATE <- as.Date(paste0(UK$DATE, "-01"), format = "%Y-%m-%d")
+
+UK_yearly_temp <- UK %>%
+  group_by(year = lubridate::year(DATE)) %>%
+  summarize(average_temperature = mean(TAVG, na.rm = TRUE))
+
+source("Q2/code/plot_yearly_data.R")
+temp <- plot_yearly_data(UK_yearly_temp, average_temperature, "Average Temperature", "Yearly Average Temperature in UK")
+temp
+
+
+UK_yearly_heat <- UK %>%
+  group_by(year = lubridate::year(DATE)) %>% summarize(average_heat = mean(HTDD, na.rm = TRUE))
+
+heat <- plot_yearly_data(UK_yearly_temp, average_temperature, "Average Number of Heating Days", "Yearly Average Number of Heating Days in UK")
+heat
 
 ```
 

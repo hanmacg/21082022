@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells 466413 25.0    1002414 53.6   660388 35.3
-    ## Vcells 862602  6.6    8388608 64.0  1769776 13.6
+    ## Ncells 466545 25.0    1002791 53.6   660388 35.3
+    ## Vcells 863475  6.6    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
@@ -131,3 +131,259 @@ s
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-2-6.png)<!-- -->
+
+``` r
+filtered_data <- combined_data %>%
+  filter(continent %in% c("Africa", "North America", "South America", "Asia", "Europe"))
+source("Q1/code/plot_filtered_data.R")
+hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million)
+hosp
+```
+
+    ## Warning: Removed 157590 rows containing missing values (`geom_bar()`).
+
+![](README_files/figure-gfm/unnamed-chunk-2-7.png)<!-- -->
+
+``` r
+icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million)
+icu
+```
+
+    ## Warning: Removed 163863 rows containing missing values (`geom_bar()`).
+
+![](README_files/figure-gfm/unnamed-chunk-2-8.png)<!-- -->
+
+``` r
+source("Q1/code/plot_hospital_icu_data.R")
+
+
+source("Q1/code/plot_hospital_icu_data.R")
+globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
+globalp
+```
+
+    ## Warning: Removed 7332 rows containing missing values (`geom_line()`).
+
+    ## Warning: Removed 8762 rows containing missing values (`geom_line()`).
+
+![](README_files/figure-gfm/unnamed-chunk-2-9.png)<!-- -->
+
+# Question 2
+
+For London
+
+``` r
+london_weather <- read_csv("Q2/data/london_weather.csv")
+```
+
+    ## Rows: 15341 Columns: 10
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## dbl (10): date, cloud_cover, sunshine, global_radiation, max_temp, mean_temp...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+london_weather$date <- as.character(london_weather$date)
+london_weather$date <- as.Date(london_weather$date, format = "%Y%m%d")
+london <- na.omit(london_weather)
+london$month <- format(london$date, "%Y-%m")
+london_filtered <- london[london$date >= as.Date("2019-01-01"), ]
+
+monthly_precipitation <- london_filtered %>%
+  group_by(month) %>%
+  summarize(total_precipitation = sum(precipitation, na.rm = TRUE))
+
+monthly_cloudy <- london_filtered %>%
+  group_by(month) %>%
+  summarize(avg_cloud = mean(cloud_cover, na.rm = TRUE))
+
+monthly_min_temp <- london_filtered %>%
+  group_by(month) %>%
+  summarize(min_temp = min(min_temp, na.rm = TRUE))
+
+source("Q2/code/plot_monthly_data.R")
+precip <- plot_monthly_data(monthly_precipitation, total_precipitation, " Total Precipitation")
+precip
+```
+
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
+source("Q2/code/plot_monthly_data.R")
+cloud <- plot_monthly_data(monthly_cloudy, avg_cloud, "Average Cloudiness")
+cloud
+```
+
+![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+
+``` r
+source("Q2/code/plot_monthly_data.R")
+cold <- plot_monthly_data(monthly_min_temp, min_temp, "Average Minimum Temp")
+cold
+```
+
+![](README_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
+
+``` r
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+
+    ## 
+    ## Attaching package: 'kableExtra'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     group_rows
+
+``` r
+london$year <- lubridate::year(london$date)
+source("Q2/code/generate_summary_stats.R")
+summary_table <- generate_summary_stats(london, "2015-01-01")
+print(summary_table)
+```
+
+    ## <table class="table" style="margin-left: auto; margin-right: auto;">
+    ## <caption>Stats Table</caption>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:center;"> year </th>
+    ##    <th style="text-align:center;"> min_temp </th>
+    ##    <th style="text-align:center;"> max_temp </th>
+    ##    <th style="text-align:center;"> avg_temp </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2015 </td>
+    ##    <td style="text-align:center;"> -5.9 </td>
+    ##    <td style="text-align:center;"> 36.7 </td>
+    ##    <td style="text-align:center;"> 12.13416 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2016 </td>
+    ##    <td style="text-align:center;"> -4.6 </td>
+    ##    <td style="text-align:center;"> 33.2 </td>
+    ##    <td style="text-align:center;"> 11.90137 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2017 </td>
+    ##    <td style="text-align:center;"> -4.5 </td>
+    ##    <td style="text-align:center;"> 34.5 </td>
+    ##    <td style="text-align:center;"> 12.07750 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2018 </td>
+    ##    <td style="text-align:center;"> -5.4 </td>
+    ##    <td style="text-align:center;"> 35.0 </td>
+    ##    <td style="text-align:center;"> 12.52932 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2019 </td>
+    ##    <td style="text-align:center;"> -5.2 </td>
+    ##    <td style="text-align:center;"> 37.9 </td>
+    ##    <td style="text-align:center;"> 12.19397 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+
+``` r
+source("Q2/code/generate_summary_stats_extra.R")
+summary_table2 <- generate_summary_stats_extra(london, "2015-01-01")
+print(summary_table2)
+```
+
+    ## <table class="table" style="margin-left: auto; margin-right: auto;">
+    ## <caption>Stats Table</caption>
+    ##  <thead>
+    ##   <tr>
+    ##    <th style="text-align:center;"> year </th>
+    ##    <th style="text-align:center;"> sunshine_mean </th>
+    ##    <th style="text-align:center;"> cloud_cover_mean </th>
+    ##    <th style="text-align:center;"> precipitation_mean </th>
+    ##   </tr>
+    ##  </thead>
+    ## <tbody>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2015 </td>
+    ##    <td style="text-align:center;"> 4.131956 </td>
+    ##    <td style="text-align:center;"> 4.771350 </td>
+    ##    <td style="text-align:center;"> 51.6 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2016 </td>
+    ##    <td style="text-align:center;"> 4.000822 </td>
+    ##    <td style="text-align:center;"> 5.202740 </td>
+    ##    <td style="text-align:center;"> 27.0 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2017 </td>
+    ##    <td style="text-align:center;"> 3.853333 </td>
+    ##    <td style="text-align:center;"> 5.361111 </td>
+    ##    <td style="text-align:center;"> 36.8 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2018 </td>
+    ##    <td style="text-align:center;"> 4.670685 </td>
+    ##    <td style="text-align:center;"> 4.901370 </td>
+    ##    <td style="text-align:center;"> 31.8 </td>
+    ##   </tr>
+    ##   <tr>
+    ##    <td style="text-align:center;"> 2019 </td>
+    ##    <td style="text-align:center;"> 4.235890 </td>
+    ##    <td style="text-align:center;"> 5.054794 </td>
+    ##    <td style="text-align:center;"> 31.8 </td>
+    ##   </tr>
+    ## </tbody>
+    ## </table>
+
+For the UK in general
+
+``` r
+UK <- read_csv("Q2/data/UKMonthly_Detailed.csv")
+```
+
+    ## Rows: 1707 Columns: 34
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (17): STATION, DATE, NAME, CDSD_ATTRIBUTES, CLDD_ATTRIBUTES, DT00_ATTRIB...
+    ## dbl (17): LATITUDE, LONGITUDE, ELEVATION, CDSD, CLDD, DT00, DT32, DX32, DX70...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+UK$DATE <- as.Date(paste0(UK$DATE, "-01"), format = "%Y-%m-%d")
+
+UK_yearly_temp <- UK %>%
+  group_by(year = lubridate::year(DATE)) %>%
+  summarize(average_temperature = mean(TAVG, na.rm = TRUE))
+
+source("Q2/code/plot_yearly_data.R")
+temp <- plot_yearly_data(UK_yearly_temp, average_temperature, "Average Temperature", "Yearly Average Temperature in UK")
+```
+
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+``` r
+temp
+```
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+UK_yearly_heat <- UK %>%
+  group_by(year = lubridate::year(DATE)) %>% summarize(average_heat = mean(HTDD, na.rm = TRUE))
+
+heat <- plot_yearly_data(UK_yearly_temp, average_temperature, "Average Number of Heating Days", "Yearly Average Number of Heating Days in UK")
+heat
+```
+
+![](README_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
