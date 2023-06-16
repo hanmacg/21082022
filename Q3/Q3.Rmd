@@ -1,5 +1,5 @@
 ---
-title: "21082022_Q2"
+title: "21082022 Question 3"
 author: "H MacGinty"
 date: "June 2023"
 # date: "`r Sys.Date()`"
@@ -16,7 +16,7 @@ output:
     # change to true for a self-contained document, but it'll be a litte slower for Pandoc to render
     self_contained: TRUE
 abstract: |
-    This is my abstract for question 2....
+    This is an abstract for Q3...
 
 ---
 
@@ -29,19 +29,27 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 
 # Introduction {-}
 
+....
 
 # Data  {-}
 
+
+
+Discussion of data should be thorough with a table of statistics and ideally a figure.
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
 ```{r }
 
-  # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
-  # Set WD below to your project's working directory.
-
 
 ```
+
+
+
+
+
+#  Methodology \label{Meth} {-}
+
 
 
 <!-- $$ -->
@@ -59,13 +67,21 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 library(knitr)
 library(kableExtra)
 
+data <- mtcars[1:5,] %>% tibble::as_tibble()
 
+table <- kable(data, row.names = TRUE,
+      caption = 'Table with kable() and kablestyling()',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
 ```
 
 
-
 \newpage
-
 
 
 

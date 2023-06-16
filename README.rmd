@@ -6,27 +6,31 @@ output: github_document
 
 The purpose of this ReadMe is to show my output and thinking from each question.
 
-Ideally store a minimum working example data set in data folder.
-
-Add binary files in bin, and closed R functions in code. Human Readable settings files (e.g. csv) should be placed in settings/
-
 
 ```{r}
 
 rm(list = ls()) # Clean your environment:
 gc() # garbage collection - It can be useful to call gc after a large object has been removed, as this may prompt R to return memory to the operating system.
-library(tidyverse)
-list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.))
+suppressMessages(library(tidyverse))
+suppressMessages(list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.)))
 
 
 # Texevier::create_template(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
-#                           template_name = "Q1",
-#                           build_project = T, open_project = T)
-# 
-# 
+#                           template_name = "Q3_formal",
+#                            build_project = T, open_project = T)
+# # 
+# # 
 # Texevier::create_template_html(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
-#                           template_name = "Q2",
-#                           build_project = T, open_project = T)
+#                         template_name = "Q3",
+#                         build_project = T, open_project = T)
 ```
 
+
+Read in data and source functions
+```{r}
+# Movies <- read_csv("Q3/data/Movies.csv")
+# source("Q3/code/create_scores_plot.R")
+# scores_plot <- create_scores_plot(Movies)
+# print(scores_plot)
+```
 
