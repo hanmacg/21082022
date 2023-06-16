@@ -123,13 +123,13 @@ write_rds(Example_data, path = "data/Example_data.rds")
 
 # Introduction \label{Introduction}
 
-I ahve been tasked to examine the evolution of the Covid-19 outbreak
+I have been tasked to examine the evolution of the Covid-19 outbreak
 
-> I suggest renaming the top line after \@article, as done in the template ref.bib file, to something more intuitive for you to remember. Do not change the rest of the code. Also, be mindful of the fact that bib references from google scholar may at times be incorrect. Reference Latex forums for correct bibtex notation.
+
 
 # Data  {-}
 
-My data looks at ....
+My data looks at Covid-19 globally.
 
 ```{r}
 owid_covid_data <- read_csv("data/owid-covid-data.csv")
@@ -252,7 +252,7 @@ average_life_expectancy <- combined_data %>%
   summarize(average_life_expectancy = mean(life_expectancy, na.rm = TRUE))
 
 # Print the average life expectancy by continent
-print(average_life_expectancy)
+#print(average_life_expectancy)
 
 #africa has the lowest life expectancy and Europe has the highest
 
@@ -333,15 +333,16 @@ Show how quickly different regions increased their hospitalization facilities, a
 
 Hospitalisation and ICU admission are plotted.
 
-Europe and South America experienced the highest numbers of weekly ICU admission per million .
+Plotting across continent, we can see that each continent experienced waves of hospitalisation at different times. Europe, North America and Asia experienced the highest shocks in hospitalisations. Hospitalisation in Africa were always low. 
 
-Plotting hopsital patients and ICU patients, it can be seen that they follow the same trends and waves. ICU patient numbers always increase globally when global hospitalisations increase. Therefore, hospitalisation led ICU hospitalisation. 
+Europe and South America experienced the highest numbers of weekly ICU admission per million . This is interesting because South America did not have as sharp spikes in general hospitalisations compared to other continents. 
+
+Plotting hospital patients and ICU patients, it can be seen that they follow the same trends and waves. ICU patient numbers always increase globally when global hospitalisations increase. Therefore, hospitalisation led ICU hospitalisation. 
 
 
 We can also see that there is a positive correlation (0.6) between the numberr of hospital patients and number of tests. Therefore, the number of tests conducted can act as a good indicator of hospitalisation. 
 
 ```{r}
-
 # ggplot(lowest_le, aes(x = date, y = hosp_patients_per_million, fill = location)) +
 #   geom_line() +
 #   labs(x = "Date", y = "Total Deaths") +
@@ -351,29 +352,50 @@ We can also see that there is a positive correlation (0.6) between the numberr o
 filtered_data <- combined_data %>%
   filter(continent %in% c("Africa", "North America", "South America", "Asia", "Europe"))
 
-# Convert the "date" variable to a date format
-filtered_data$date <- as.Date(filtered_data$date)
+# # Convert the "date" variable to a date format
+# filtered_data$date <- as.Date(filtered_data$date)
 
 # Create the ggplot line plot
-ggplot(filtered_data, aes(x = date, y = weekly_hosp_admissions_per_million, fill = continent)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Date", y = "Weekly Hospital Admissions per Million") +
-  ggtitle("Weekly Hospital Admissions per Million among Continents") +
-  scale_fill_discrete(name = "Continent")
+# ggplot(filtered_data, aes(x = date, y = weekly_hosp_admissions_per_million, fill = continent)) +
+#   geom_bar(stat = "identity", position = "dodge") +
+#   labs(x = "Date", y = "Weekly Hospital Admissions per Million") +
+#   ggtitle("Weekly Hospital Admissions per Million among Continents") +
+#   scale_fill_discrete(name = "Continent")
+# 
+# ggplot(filtered_data, aes(x = date, y = weekly_icu_admissions_per_million, fill = continent)) +
+#   geom_bar(stat = "identity", position = "dodge") +
+#   labs(x = "Date", y = "Weekly ICU Admissions per Million") +
+#   ggtitle("Weekly ICU Admissions per Million for Continents") +
+#   scale_fill_discrete(name = "Continent")
 
-ggplot(filtered_data, aes(x = date, y = weekly_icu_admissions_per_million, fill = continent)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Date", y = "Weekly ICU Admissions per Million") +
-  ggtitle("Weekly ICU Admissions per Million for Continents") +
-  scale_fill_discrete(name = "Continent")
+source("code/plot_filtered_data.R")
+
+hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million)
+hosp
+```
+
+
+```{r}
+#next plot
+#
+icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million)
+icu
 
 #Worldwide, we see that hospitalisations and ICU admissions followed similar waves. 
-ggplot(combined_data, aes(x = date)) +
-  geom_line(aes(y = hosp_patients, color = "Hospitalizations")) +
-  geom_line(aes(y = icu_patients, color = "ICU Admissions")) +
-  labs(x = "Date", y = "Count") +
-  ggtitle("Hospitalizations and ICU Admissions over Time") +
-  scale_color_manual(values = c("Hospitalizations" = "blue", "ICU Admissions" = "red"))
+# ggplot(combined_data, aes(x = date)) +
+#   geom_line(aes(y = hosp_patients, color = "Hospitalizations")) +
+#   geom_line(aes(y = icu_patients, color = "ICU Admissions")) +
+#   labs(x = "Date", y = "Count") +
+#   ggtitle("Hospitalizations and ICU Admissions over Time") +
+#   scale_color_manual(values = c("Hospitalizations" = "blue", "ICU Admissions" = "red"))
+```
+
+
+```{r}
+source("code/plot_hospital_icu_data.R")
+globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
+globalp
+
 
 correlation <- cor(combined_data$hosp_patients, combined_data$total_tests, use = "complete.obs")
 
@@ -428,17 +450,17 @@ ggplot(monthly_data, aes(x = month, y = monthly_avg_hosp_admissions)) +
   ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
 
 
-# Aggregate the data to monthly level
-monthly_data <- africa_data %>%
-  mutate(month = floor_date(date, unit = "month")) %>%
-  group_by(month) %>%
-  summarize(monthly_avg_icu_admissions = mean(weekly_icu_admissions_per_million, na.rm = TRUE))
-
-# Create the ggplot line plot
-ggplot(monthly_data, aes(x = month, y = monthly_avg_icu_admissions)) +
-  geom_line() +
-  labs(x = "Month", y = "Monthly Average Hospital Admissions per Million") +
-  ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
+# # Aggregate the data to monthly level
+# monthly_data <- africa_data %>%
+#   mutate(month = floor_date(date, unit = "month")) %>%
+#   group_by(month) %>%
+#   summarize(monthly_avg_icu_admissions = mean(weekly_icu_admissions_per_million, na.rm = TRUE))
+# 
+# # Create the ggplot line plot
+# ggplot(monthly_data, aes(x = month, y = monthly_avg_icu_admissions)) +
+#   geom_line() +
+#   labs(x = "Month", y = "Monthly Average Hospital Admissions per Million") +
+#   ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
 
 
 
@@ -479,7 +501,7 @@ ggplot(monthly_data, aes(x = month, y = monthly_avg_icu_admissions)) +
 
 
 
-#  Regression Results
+
 
 
 
@@ -493,60 +515,18 @@ ggplot(monthly_data, aes(x = month, y = monthly_avg_icu_admissions)) +
 <!-- \end{align} -->
 <!-- $$ -->
 
-# Results
-
-Tables can be included as follows. Use the _xtable_ (or kable) package for tables. Table placement = H implies Latex tries to place the table Here, and not on a new page (there are, however, very many ways to skin this cat. Luckily there are many forums online!).
 
 
-```{r ShortTable, results = 'asis'}
-
-
-```
-
-
-
-```{r LongTable, results = 'asis'}
-
-```
 
 \hfill
 
 <!-- hfill can be used to create a space, like here between text and table. -->
 
 
-```{r, results = 'asis'}
-
-if(!require(huxtable)) install.packages(huxtable)
-library(huxtable)
-data(diamonds, package = 'ggplot2')
-Title <- "Regression Output"
-Label <- "Reg01"
-lm1 <- lm(price ~ carat, diamonds)
-lm2 <- lm(price ~ depth, diamonds)
-lm3 <- lm(price ~ carat + depth, diamonds)
-htab <-
-huxreg(lm1, lm2, lm3,
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-# More settings:
-font_size(htab) <- 12
-# Let's change regression names: this is slightly hacky, but works. Comment out this section to see what the default looks like:
-  Names <- c( "Reg1", "Reg2", "Reg3")
-  for(i in 1:length(Names)) {
-    htab[1,][[1+i]] <- Names[i]
-  }
-# Now simply call the table:
-htab
-
-```
-
-
 
 # Conclusion
 
-In conclusion, ....
+In conclusion, Covid-19 wrecked havoc throughout the world, leading to increase deaths and hospitalisations.
 
 <!-- Make title of bibliography here: -->
 <!-- \newpage -->

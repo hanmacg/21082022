@@ -65,5 +65,19 @@ Total_cases_per_Million <- highest_le$total_cases_per_million
 s <- plot_lowest_le(highest_le, Total_cases_per_Million, "Total Cases per Million over Time in Regions with Highest LE")
 s
 
+filtered_data <- combined_data %>%
+  filter(continent %in% c("Africa", "North America", "South America", "Asia", "Europe"))
+source("Q1/code/plot_filtered_data.R")
+hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million)
+hosp
+icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million)
+icu
+source("Q1/code/plot_hospital_icu_data.R")
+
+
+source("Q1/code/plot_hospital_icu_data.R")
+globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
+globalp
+
 ```
 

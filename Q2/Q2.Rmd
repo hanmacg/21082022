@@ -28,7 +28,7 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 \newpage
 
 # Introduction {-}
-
+ I must convince my freind to stay in Cape Town and not move to London.
 
 # Data  {-}
 
@@ -36,10 +36,118 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
 ```{r }
-
-  # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
+# This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
   # Set WD below to your project's working directory.
 
+UK <- read_csv("data/UKMonthly_Detailed.csv")
+london_weather <- read_csv("data/london_weather.csv")
+
+london_weather$date <- as.character(london_weather$date)
+
+london_weather$date <- as.Date(london_weather$date, format = "%Y%m%d")
+
+
+UK$DATE <- as.Date(paste0(UK$DATE, "-01"), format = "%Y-%m-%d")
+```
+
+Firstly, I examine data on London specifically, as this is likely where my friend would live and work. 
+
+From the first plot, we see that London is super rainy. In the last year  of the available data (2019), it has rained every month. In October 2019, it rained almost 90mm. Even in June, London's summer, it rained almost 80 mm. 
+
+
+The second plot looks at cloud cover. It is never not cloudy in London. 
+
+
+Thirdly, it is cold! In some months of the year, the average minimum temperature is below 0 degrees. 
+```{r }
+ggplot(data = london_weather, aes(x = date)) +
+  geom_line(aes(y = max_temp, color = "Max Temp"), size = 1) +
+  geom_line(aes(y = min_temp, color = "Min Temp"), size = 1) +
+  xlab("Date") +
+  ylab("Temperature (°C)") +
+  ggtitle("Max and Min Temperature in London") +
+  scale_color_manual(values = c("red", "blue")) +
+  theme_minimal()
+
+
+min(london_weather$min_temp)
+summarise(london_weather$mean_temp)
+
+colnames(london_weather)
+
+class(london_weather$max_temp)
+mean(london_weather$max_temp, na.rm =TRUE)
+london <- na.omit(london_weather)
+
+
+lon <- london %>% filter(date >= as.Date("2019-01-01")) %>% ggplot(aes(x = date, y = precipitation)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  xlab("Date") +
+  ylab("Precipitation (mm)") +
+  ggtitle("Precipitation in London") +
+  theme_minimal()
+
+lon
+
+
+#total precipitation per month from 2019
+london$date <- as.Date(london$date, format = "%Y%m%d")
+
+london$month <- format(london$date, "%Y-%m")
+
+london_filtered <- london[london$date >= as.Date("2019-01-01"), ]
+
+monthly_precipitation <- london_filtered %>%
+  group_by(month) %>%
+  summarize(total_precipitation = sum(precipitation, na.rm = TRUE))
+
+ggplot(data = monthly_precipitation, aes(x = month, y = total_precipitation)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  xlab("Month") +
+  ylab("Total Precipitation (mm)") +
+  ggtitle("Total Monthly Precipitation in London (2019 onwards)") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+#cloud cover
+london$date <- as.Date(london$date, format = "%Y%m%d")
+
+london$month <- format(london$date, "%Y-%m")
+
+london_filtered <- london[london$date >= as.Date("2019-01-01"), ]
+
+monthly_cloudy <- london_filtered %>%
+  group_by(month) %>%
+  summarize(avg_cloud = mean(cloud_cover, na.rm = TRUE))
+
+ggplot(data = monthly_cloudy, aes(x = month, y = avg_cloud)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  xlab("Month") +
+  ylab("Average Cloudiness (1-10)") +
+  ggtitle("Average Monthly Cloudiness in London (2019 onwards)") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Even in summer it is super cloudy
+
+
+monthly_min_temp <- london_filtered %>%
+  group_by(month) %>%
+  summarize(min_temp = min(min_temp, na.rm = TRUE))
+
+# Plot the monthly minimum temperature
+ggplot(data = monthly_min_temp, aes(x = month, y = min_temp)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  xlab("Month") +
+  ylab("Minimum Temperature (Celcius)") +
+  ggtitle("Average Monthly Minimum Temp in London (2019 onwards)") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# ggplot(data = london, aes(x = date, y = sunshine)) +
+#   geom_line(color = "orange", size = 1) +
+#   xlab("Date") +
+#   ylab("Sunshine Duration (hours)") +
+#   ggtitle("Sunshine Duration in London") +
+#   theme_minimal()
 
 ```
 
@@ -54,14 +162,51 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 
 ## Results {-}
 
+Even if my friend does not move to London, it is cold everywhere in the UK. I plotted the yearly average temperature in the UK. The average temperature does not rise above 10-11 degrees. Its been like this since 1880 - its not going to change anytime soon. 
 
-```{r table-1, echo=TRUE, message=FALSE, warning=FALSE, results="asis"}
-library(knitr)
-library(kableExtra)
+```{r}
 
+ggplot(data = UK, aes(x = DATE, y = HTDD)) +
+  geom_line(color = "red", size = 1) +
+  xlab("Date") +
+  ylab("Heating Degree Days (HDD)") +
+  ggtitle("Heating Degree Days in UK") +
+  theme_minimal()
+
+ggplot(data = UK, aes(x = DATE, y = TAVG)) +
+  geom_line(color = "red", size = 1) +
+  xlab("Date") +
+  ylab("Heating Degree Days (HDD)") +
+  ggtitle("Heating Degree Days in UK") +
+  theme_minimal()
+
+
+UK_quarterly <- UK %>%
+  group_by(quarter = lubridate::quarter(DATE), year = lubridate::year(DATE)) %>%
+  summarize(average_temperature = mean(TAVG, na.rm = TRUE))
+
+
+ggplot(data = UK_quarterly, aes(x = year, y = average_temperature)) +
+  geom_line(color = "red", size = 1) +
+  xlab("Year") +
+  ylab("Average Temperature") +
+  ggtitle("Quarterly Average Temperature in UK") +
+  theme_minimal()
+
+#make data yearly - as you can see average temperatures since 1880 are very low. On Average, the temparature is below 11 degrees Celcius. 
+
+UK_yearly <- UK %>%
+  group_by(year = lubridate::year(DATE)) %>%
+  summarize(average_temperature = mean(TAVG, na.rm = TRUE))
+
+ggplot(data = UK_yearly, aes(x = year, y = average_temperature)) +
+  geom_line(color = "red", size = 1) +
+  xlab("Year") +
+  ylab("Average Temperature") +
+  ggtitle("Yearly Average Temperature in UK") +
+  theme_minimal()
 
 ```
-
 
 
 \newpage
