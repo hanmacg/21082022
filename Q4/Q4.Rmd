@@ -92,7 +92,7 @@ output:
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
 abstract: |
-  Abstract to be written here for Q4...
+  Netflix has seen a decline in users in recent months and a sharp decline in their share price.
 ---
 
 <!-- First: Set your default preferences for chunk options: -->
@@ -123,7 +123,7 @@ write_rds(Example_data, path = "data/Example_data.rds")
 
 # Introduction \label{Introduction}
 
-Write here
+Netflix is concerned with their drop in users.
 
 # Data  {-}
 
@@ -134,6 +134,34 @@ Discussion of data should be thorough with a table of statistics and ideally a f
 
 ```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 
+titles <- read_csv("data/titles.csv")
+credits <- read_csv("data/credits.csv")
+merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
+
+top_10_popular <- merged_data %>%
+  group_by(title) %>%
+  summarise(max_imdb_score = max(imdb_score)) %>%
+  arrange(desc(max_imdb_score)) %>%
+  top_n(10, max_imdb_score)
+
+library(knitr)
+library(kableExtra)
+table <- kable(top_10_popular, row.names = TRUE,
+      caption = 'Top 10 titles on Netflix by IMDB Score',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
+
+
+top_10_popular_actor <- merged_data %>%
+  group_by(name) %>%
+  summarise(max_imdb_score = max(imdb_score)) %>%
+  arrange(desc(max_imdb_score)) %>%
+  top_n(10, max_imdb_score)
 
 
 ```
