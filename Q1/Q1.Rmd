@@ -123,7 +123,7 @@ write_rds(Example_data, path = "data/Example_data.rds")
 
 # Introduction \label{Introduction}
 
-Question 1 examines...
+I ahve been tasked to examine the evolution of the Covid-19 outbreak
 
 > I suggest renaming the top line after \@article, as done in the template ref.bib file, to something more intuitive for you to remember. Do not change the rest of the code. Also, be mindful of the fact that bib references from google scholar may at times be incorrect. Reference Latex forums for correct bibtex notation.
 
@@ -131,50 +131,327 @@ Question 1 examines...
 
 My data looks at ....
 
+```{r}
+owid_covid_data <- read_csv("data/owid-covid-data.csv")
+
+Deaths_by_cause <- read_csv("data/Deaths_by_cause.csv")
+covid_data_description <- read_csv("data/covid_data_description.csv")
+
+
+#merged_data <- merge(owid_covid_data, Deaths_by_cause, by.x = "iso_code", by.y = "Code", all.x = TRUE)
+
+combined_data <- bind_rows(owid_covid_data, Deaths_by_cause)
+
+```
+
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
-Figure 1 ....
+First I want to provide insights using the dataset into how African countries experienced COVID compared to other regions.
+
+First, the average total cases for Africa is plotted over time. They steeply rose over time. The next figure compares Africa across continents. It had the lowest increase (flattest slope) in covid cases over time. Europe, on the other hand faced rapid increases in COVID-19. 
+
+Africa also has the least fully vaccinated people per hundred people. This is possibly due to being underresourced. 
 
 ```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 
   # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
   # Set WD below to your project's working directory.
+first_date <- min(owid_covid_data$date)
+#print(first_date)
 
- 
+last_date <- max(owid_covid_data$date)
+#print(last_date)
+
+# Plotting African countries total cases over time. 
+
+
+africa_data <- owid_covid_data %>% 
+  filter(continent == "Africa")
+
+average_cases_per_million <- africa_data %>% 
+  group_by(date) %>% 
+  summarize(average_cases_per_million = mean(total_cases_per_million, na.rm = TRUE))
+
+africa_data$date <- as.Date(africa_data$date)
+
+ggplot(average_cases_per_million, aes(x = date, y = average_cases_per_million)) +
+  geom_line() +
+  labs(x = "Date", y = "Average Cases per Million") +
+  ggtitle("Average COVID-19 Cases per Million in African Countries over Time")
+
+# continent_categories <- unique(combined_data$continent)
+# print(continent_categories)
+# 
+# ggplot(owid_covid_data, aes(x = date, y = total_cases_per_million)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Average Cases per Million") +
+#   ggtitle("Average COVID-19 Cases per Million over Time") +
+#   facet_wrap(~ continent, scales = "free")
+
+# #For all countries
+# owid_covid_data$date <- as.Date(owid_covid_data$date)
+# 
+# # Figure 1:  Calculate the average cases per million per date for each continent
+# average_cases_per_million <- owid_covid_data %>%
+#   group_by(date, continent) %>%
+#   summarize(average_cases_per_million = mean(total_cases_per_million, na.rm = TRUE))
+# 
+# # Create the ggplot line plot for each continent
+# ggplot(average_cases_per_million, aes(x = date, y = average_cases_per_million, color = continent)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Average Cases per Million") +
+#   ggtitle("Average COVID-19 Cases per Million by Continent over Time")
+# 
+# 
+# #Figure 2: for vaccinations
+# average_vacc_per_million <- owid_covid_data %>%
+#   group_by(date, continent) %>%
+#   summarize(average_vacc = mean(people_fully_vaccinated_per_hundred, na.rm = TRUE))
+# 
+# # Create the ggplot line plot for each continent
+# ggplot(average_vacc_per_million, aes(x = date, y = average_vacc, color = continent)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Average Fully Vaccinated") +
+#   ggtitle("Average Fully Vaccinated per Hundred People")
+
+##FUNCTIONS########
+source("code/plot_covid_and_vaccination.R")
+
+plots <- plot_covid_and_vaccination(owid_covid_data)
+plots$plot_cases  # Figure 1: Average COVID-19 Cases per Million by Continent over Time
+plots$plot_vaccinations  # Figure 2: Average Fully Vaccinated per Hundred 
 
 ```
 
+Next I want to examine whether countries with specific concentrated groupings (e.g. more poverty, higher prevalence of smokers, higher general life expectancy and elderly populations) displayed distinct patterns in the severity of their Covid experience.
 
-Figure 2 ...
+From the below tables, we can see that Africa has the lowest Life Expectancy and Europe has the highest.
+
+
+
+Among countries with the lowest life expectancy, total deaths remained relatively low except for the Central African Republic, where deaths roses rapidly from the beginning of 2020 to the end of 2022. Lesotho experienced the next highest number of deaths.
+
+Among countries with the highest life expectancy, Japan had the highest number of deaths, reaching over 30 000 around quarter 3 of 2022. Deaths were very low in the locations of Monaco, San Marino, and Macao. 
+
+Total cases per million where the highest in Lesotho, probably owing to its small population. For areas with high life expectancy, San Marino experienced the highest number of cases per million people, followed by Macao. 
 
 ```{r Figure2, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
 
-ExampleData <- read_rds( "data/Example_data.rds")
 
-source("code/Example_Plot_Scatter.R") # Load a function from your 'code' folder. This e.g. plots scatters to your own preferences.
-source( "code/Data_Create.R") #
 
-ExampleData <- Data_Create(N = 100) # Same as the ExampleData loaded above - this is just a function to create the stored data.
+if ("female_smokers" %in% colnames(combined_data)) {
+  print("Variable 'female_smokers' exists in the dataset.")
+} else {
+  print("Variable 'female_smokers' does not exist in the dataset.")
+}
 
-g <- Example_Plot_Scatter(DataInput = ExampleData,
-                          X = "Height_Score",
-                          Y = "Weight_Score",
-                          Z = "Agility_Score",
-                          Theme = theme_bw(), # run ?ggthemes for other themes.
-                          Title = "", # I prefer to use the caption set above.
-                          Ylab = "Height",
-                          Xlab = "Lenght",
-                          LegendTitle = "Agility",
-                          TitleSize = 10,
-                          LabSize = 10)
 
-g
+
+average_life_expectancy <- combined_data %>%
+  group_by(location) %>%
+  summarize(average_life_expectancy = mean(life_expectancy, na.rm = TRUE))
+
+# Print the average life expectancy by continent
+print(average_life_expectancy)
+
+#africa has the lowest life expectancy and Europe has the highest
+
+#countries with highest LE
+highest_life_expectancy_regions <- average_life_expectancy %>%
+  top_n(5, wt = average_life_expectancy)
+
+# Print the regions with the highest life expectancy
+print(highest_life_expectancy_regions)
+
+#countries with lowest LE
+lowest_life_expectancy_regions <- average_life_expectancy %>%
+  top_n(5, wt = -average_life_expectancy)
+
+# Print the regions with the lowest life expectancy
+print(lowest_life_expectancy_regions)
+
+##FUNCTION BEGINS
+
+lowest_le <- combined_data %>%
+filter(location %in% c("Chad", "Lesotho", "Central African Republic", "Nigeria", "Sierra Leone"))
+Total_Deaths <- lowest_le$total_deaths
+
+# ggplot(lowest_le, aes(x = date, y = total_deaths, color = location)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Total Deaths") +
+#   ggtitle("Total Deaths over Time in Regions with Lowest LE") + theme_minimal()
+
+source("code/plot_lowest_le.R")
+p <- plot_lowest_le(lowest_le, Total_Deaths, "Total Deaths over Time in Regions with Lowest LE")
+p
+
+#do the same for those with highest LE
+
+highest_le <- combined_data %>%
+filter(location %in% c("Hong Kong", "Japan", "Macao", "Monaco", "San Marino"))
+Total_deaths <- highest_le$total_deaths
+
+# ggplot(highest_le, aes(x = date, y = total_deaths, color = location)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Total Deaths") +
+#   ggtitle("Total Deaths over Time in Regions with Lowest LE") + theme_minimal()
+
+q <- plot_lowest_le(highest_le, Total_deaths, "Total Deaths over Time in Regions with Highest LE")
+q
+
+#total covid cases in lowest LE
+
+print(lowest_life_expectancy_regions)
+
+lowest_le <- combined_data %>%
+filter(location %in% c("Chad", "Lesotho", "Central African Republic", "Nigeria", "Sierra Leone"))
+Total_Cases_per_Million <- lowest_le$total_cases_per_million
+
+# ggplot(lowest_le, aes(x = date, y = total_cases_per_million, color = location)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Total Deaths") +
+#   ggtitle("Total Cases per Million over Time in Regions with Lowest LE") + theme_minimal()
+
+r <- plot_lowest_le(lowest_le, Total_Cases_per_Million, "Total Cases per Million over Time in Regions with Lowest LE")
+r
+
+#Cases with highest LE
+
+# ggplot(highest_le, aes(x = date, y = total_cases_per_million, color = location)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Total Deaths") +
+#   ggtitle("Total Cases per Million over Time in Regions with Highest LE") + theme_minimal()
+
+Total_cases_per_Million <- highest_le$total_cases_per_million
+
+s <- plot_lowest_le(highest_le, Total_cases_per_Million, "Total Cases per Million over Time in Regions with Highest LE")
+s
+
+```
+
+Show how quickly different regions increased their hospitalization facilities, and whether this led or lagged ICU admissions.
+
+Hospitalisation and ICU admission are plotted.
+
+Europe and South America experienced the highest numbers of weekly ICU admission per million .
+
+Plotting hopsital patients and ICU patients, it can be seen that they follow the same trends and waves. ICU patient numbers always increase globally when global hospitalisations increase. Therefore, hospitalisation led ICU hospitalisation. 
+
+
+We can also see that there is a positive correlation (0.6) between the numberr of hospital patients and number of tests. Therefore, the number of tests conducted can act as a good indicator of hospitalisation. 
+
+```{r}
+
+# ggplot(lowest_le, aes(x = date, y = hosp_patients_per_million, fill = location)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Total Deaths") +
+#   ggtitle("Total Cases per Million over Time in Regions with Highest LE") + theme_minimal()
+
+ 
+filtered_data <- combined_data %>%
+  filter(continent %in% c("Africa", "North America", "South America", "Asia", "Europe"))
+
+# Convert the "date" variable to a date format
+filtered_data$date <- as.Date(filtered_data$date)
+
+# Create the ggplot line plot
+ggplot(filtered_data, aes(x = date, y = weekly_hosp_admissions_per_million, fill = continent)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Date", y = "Weekly Hospital Admissions per Million") +
+  ggtitle("Weekly Hospital Admissions per Million among Continents") +
+  scale_fill_discrete(name = "Continent")
+
+ggplot(filtered_data, aes(x = date, y = weekly_icu_admissions_per_million, fill = continent)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Date", y = "Weekly ICU Admissions per Million") +
+  ggtitle("Weekly ICU Admissions per Million for Continents") +
+  scale_fill_discrete(name = "Continent")
+
+#Worldwide, we see that hospitalisations and ICU admissions followed similar waves. 
+ggplot(combined_data, aes(x = date)) +
+  geom_line(aes(y = hosp_patients, color = "Hospitalizations")) +
+  geom_line(aes(y = icu_patients, color = "ICU Admissions")) +
+  labs(x = "Date", y = "Count") +
+  ggtitle("Hospitalizations and ICU Admissions over Time") +
+  scale_color_manual(values = c("Hospitalizations" = "blue", "ICU Admissions" = "red"))
+
+correlation <- cor(combined_data$hosp_patients, combined_data$total_tests, use = "complete.obs")
+
+# Print the correlation coefficient
+print(correlation)
+
+
+
+# ggplot(filtered_data, aes(x = date, y = weekly_hosp_admissions_per_million, color = continent)) +
+#   geom_line() +
+#   labs(x = "Date", y = "Weekly Hospital Admissions per Million") +
+#   ggtitle("Weekly Hospital Admissions per Million for Selected Locations") +
+#   scale_color_discrete(name = "Location")
+
+
+
+#SOUTH AFRICA
+south_africa_data <- combined_data %>%
+  filter(location == "South Africa")
+
+# Convert the "date" variable to a date format
+south_africa_data$date <- as.Date(south_africa_data$date)
+
+
+# Create the ggplot line plot
+# ggplot(africa_data, aes(x = date)) +
+#   geom_line(aes(y = weekly_icu_admissions_per_million, color = "ICU Admissions")) +
+#   geom_line(aes(y = weekly_hosp_admissions_per_million, color = "Hospital Admissions")) +
+#   labs(x = "Date", y = "Admissions per Million",
+#        color = "Admission Type") +
+#   ggtitle("Weekly ICU and Hospital Admissions per Million in South Africa") +
+#   scale_color_manual(values = c("red", "blue"),
+#                      labels = c("ICU Admissions", "Hospital Admissions"))
+
+
+south_africa_data <- combined_data %>%
+  filter(location == "South Africa")
+
+# Convert the "date" variable to a date format
+south_africa_data$date <- as.Date(south_africa_data$date)
+
+# Aggregate the data to monthly level
+monthly_data <- south_africa_data %>%
+  mutate(month = floor_date(date, unit = "month")) %>%
+  group_by(month) %>%
+  summarize(monthly_avg_hosp_admissions = mean(weekly_hosp_admissions_per_million, na.rm = TRUE))
+
+# Create the ggplot line plot
+ggplot(monthly_data, aes(x = month, y = monthly_avg_hosp_admissions)) +
+  geom_line() +
+  labs(x = "Month", y = "Monthly Average Hospital Admissions per Million") +
+  ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
+
+
+# Aggregate the data to monthly level
+monthly_data <- africa_data %>%
+  mutate(month = floor_date(date, unit = "month")) %>%
+  group_by(month) %>%
+  summarize(monthly_avg_icu_admissions = mean(weekly_icu_admissions_per_million, na.rm = TRUE))
+
+# Create the ggplot line plot
+ggplot(monthly_data, aes(x = month, y = monthly_avg_icu_admissions)) +
+  geom_line() +
+  labs(x = "Month", y = "Monthly Average Hospital Admissions per Million") +
+  ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
+
+
+
+
+
+
+
+
 
 
 
 ```
 
-To reference the plot above, add a ``\\label'' after the caption in the chunk heading, as done above. Then reference the plot as such: As can be seen, Figures \ref{Figure1}  and \ref{Figure2} are excellent, with Figure \ref{Figure2} being particularly aesthetically pleasing due to its device setting of Tikz. The nice thing now is that it correctly numbers all your figures (and sections or tables) and will update if it moves. The links are also dynamic.
 
 
 <!-- :::::: {.columns data-latex="[T]"} -->

@@ -25,12 +25,45 @@ suppressMessages(list.files('code/', full.names = T, recursive = T) %>% .[grepl(
 #                         build_project = T, open_project = T)
 ```
 
+# Question 1
 
 Read in data and source functions
 ```{r}
-# Movies <- read_csv("Q3/data/Movies.csv")
-# source("Q3/code/create_scores_plot.R")
-# scores_plot <- create_scores_plot(Movies)
-# print(scores_plot)
+owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv")
+source("Q1/code/plot_covid_and_vaccination.R")
+plots <- plot_covid_and_vaccination(owid_covid_data)
+plots$plot_cases  # Figure 1: Average COVID-19 Cases per Million by Continent over Time
+plots$plot_vaccinations  # Figure 2: Average Fully Vaccinated per Hundred
+
+
+Deaths_by_cause <- read_csv("Q1/data/Deaths_by_cause.csv")
+combined_data <- bind_rows(owid_covid_data, Deaths_by_cause)
+
+lowest_le <- combined_data %>%
+filter(location %in% c("Chad", "Lesotho", "Central African Republic", "Nigeria", "Sierra Leone"))
+Total_Deaths <- lowest_le$total_deaths
+
+source("Q1/code/plot_lowest_le.R")
+p <- plot_lowest_le(lowest_le, Total_Deaths, "Total Deaths over Time in Regions with Lowest LE")
+p
+
+highest_le <- combined_data %>%
+filter(location %in% c("Hong Kong", "Japan", "Macao", "Monaco", "San Marino"))
+Total_deaths <- highest_le$total_deaths
+q <- plot_lowest_le(highest_le, Total_deaths, "Total Deaths over Time in Regions with Highest LE")
+q
+
+lowest_le <- combined_data %>%
+filter(location %in% c("Chad", "Lesotho", "Central African Republic", "Nigeria", "Sierra Leone"))
+Total_Cases_per_Million <- lowest_le$total_cases_per_million
+r <- plot_lowest_le(lowest_le, Total_Cases_per_Million, "Total Cases per Million over Time in Regions with Lowest LE")
+r
+
+
+Total_cases_per_Million <- highest_le$total_cases_per_million
+
+s <- plot_lowest_le(highest_le, Total_cases_per_Million, "Total Cases per Million over Time in Regions with Highest LE")
+s
+
 ```
 
