@@ -139,6 +139,7 @@ credits <- read_csv("data/credits.csv")
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
 top_10_popular <- merged_data %>%
+    filter(type == "MOVIE") %>% 
   group_by(title) %>%
   summarise(max_imdb_score = max(imdb_score)) %>%
   arrange(desc(max_imdb_score)) %>%
@@ -158,11 +159,42 @@ table
 
 
 top_10_popular_actor <- merged_data %>%
+  filter(role == "ACTOR") %>% 
   group_by(name) %>%
   summarise(max_imdb_score = max(imdb_score)) %>%
   arrange(desc(max_imdb_score)) %>%
   top_n(10, max_imdb_score)
 
+#plot average IMDB scores for movies with certain actors over time
+
+categories <- unique(merged_data$type)
+
+ggplot(merged_data, aes(x = type)) +
+  geom_bar() +
+  xlab("Type") +
+  ylab("Count") +
+  ggtitle("Count of Movies versus Series")
+
+
+selected_movies <- c("C/o Kancharapalem", "Chhota Bheem & Krishna in Mayanagari", "David Attenborough: A Life on Our Planet",
+                     "No Longer Kids", "Forrest Gump", "Inception", "Sky Tour: The Movie", "A Lion in the House",
+                     "Anbe Sivam", "Bo Burnham: Inside", "Bye Bye London", "Rubaru Roshni")
+
+filtered_data <- merged_data[merged_data$title %in% selected_movies, ]
+
+ggplot(filtered_data, aes(x = runtime)) +
+  geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
+  xlab("Runtime") +
+  ylab("Count") +
+  ggtitle("Distribution of Movie Runtimes for Selected Movies")
+
+
+#run time for movies
+ggplot(merged_data, aes(x = runtime)) +
+  geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
+  xlab("Runtime") +
+  ylab("Count") +
+  ggtitle("Distribution of Movie Runtimes")
 
 ```
 
