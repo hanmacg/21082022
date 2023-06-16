@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells 466545 25.0    1002791 53.6   660388 35.3
-    ## Vcells 863475  6.6    8388608 64.0  1769776 13.6
+    ## Ncells 466554 25.0    1002817 53.6   660388 35.3
+    ## Vcells 863606  6.6    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
@@ -242,103 +242,221 @@ library(kableExtra)
 ``` r
 london$year <- lubridate::year(london$date)
 source("Q2/code/generate_summary_stats.R")
-summary_table <- generate_summary_stats(london, "2015-01-01")
-print(summary_table)
+
+summary_stats <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>%
+  summarize(
+    min_temp = min(min_temp, na.rm = TRUE),
+    max_temp = max(max_temp, na.rm = TRUE),
+    avg_temp = mean(mean_temp, na.rm =TRUE)
+
+
+  )
+
+
+kable(summary_stats, caption = "Stats Table", align = "c") %>%
+    kable_styling()
 ```
 
-    ## <table class="table" style="margin-left: auto; margin-right: auto;">
-    ## <caption>Stats Table</caption>
-    ##  <thead>
-    ##   <tr>
-    ##    <th style="text-align:center;"> year </th>
-    ##    <th style="text-align:center;"> min_temp </th>
-    ##    <th style="text-align:center;"> max_temp </th>
-    ##    <th style="text-align:center;"> avg_temp </th>
-    ##   </tr>
-    ##  </thead>
-    ## <tbody>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2015 </td>
-    ##    <td style="text-align:center;"> -5.9 </td>
-    ##    <td style="text-align:center;"> 36.7 </td>
-    ##    <td style="text-align:center;"> 12.13416 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2016 </td>
-    ##    <td style="text-align:center;"> -4.6 </td>
-    ##    <td style="text-align:center;"> 33.2 </td>
-    ##    <td style="text-align:center;"> 11.90137 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2017 </td>
-    ##    <td style="text-align:center;"> -4.5 </td>
-    ##    <td style="text-align:center;"> 34.5 </td>
-    ##    <td style="text-align:center;"> 12.07750 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2018 </td>
-    ##    <td style="text-align:center;"> -5.4 </td>
-    ##    <td style="text-align:center;"> 35.0 </td>
-    ##    <td style="text-align:center;"> 12.52932 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2019 </td>
-    ##    <td style="text-align:center;"> -5.2 </td>
-    ##    <td style="text-align:center;"> 37.9 </td>
-    ##    <td style="text-align:center;"> 12.19397 </td>
-    ##   </tr>
-    ## </tbody>
-    ## </table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Stats Table
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+year
+</th>
+<th style="text-align:center;">
+min_temp
+</th>
+<th style="text-align:center;">
+max_temp
+</th>
+<th style="text-align:center;">
+avg_temp
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+-5.9
+</td>
+<td style="text-align:center;">
+36.7
+</td>
+<td style="text-align:center;">
+12.13416
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+-4.6
+</td>
+<td style="text-align:center;">
+33.2
+</td>
+<td style="text-align:center;">
+11.90137
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+-4.5
+</td>
+<td style="text-align:center;">
+34.5
+</td>
+<td style="text-align:center;">
+12.07750
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+-5.4
+</td>
+<td style="text-align:center;">
+35.0
+</td>
+<td style="text-align:center;">
+12.52932
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2019
+</td>
+<td style="text-align:center;">
+-5.2
+</td>
+<td style="text-align:center;">
+37.9
+</td>
+<td style="text-align:center;">
+12.19397
+</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 source("Q2/code/generate_summary_stats_extra.R")
-summary_table2 <- generate_summary_stats_extra(london, "2015-01-01")
-print(summary_table2)
+summary_stats_sun <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>%
+  summarize(
+    sunshine_mean = mean(sunshine, na.rm = TRUE),
+    cloud_cover_mean = mean (cloud_cover, na.rm = TRUE),
+    precipitation_mean = max(precipitation, na.rm = TRUE)
+  )
+
+kable(summary_stats_sun, caption = "Stats Table", align = "c") %>%
+    kable_styling()
 ```
 
-    ## <table class="table" style="margin-left: auto; margin-right: auto;">
-    ## <caption>Stats Table</caption>
-    ##  <thead>
-    ##   <tr>
-    ##    <th style="text-align:center;"> year </th>
-    ##    <th style="text-align:center;"> sunshine_mean </th>
-    ##    <th style="text-align:center;"> cloud_cover_mean </th>
-    ##    <th style="text-align:center;"> precipitation_mean </th>
-    ##   </tr>
-    ##  </thead>
-    ## <tbody>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2015 </td>
-    ##    <td style="text-align:center;"> 4.131956 </td>
-    ##    <td style="text-align:center;"> 4.771350 </td>
-    ##    <td style="text-align:center;"> 51.6 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2016 </td>
-    ##    <td style="text-align:center;"> 4.000822 </td>
-    ##    <td style="text-align:center;"> 5.202740 </td>
-    ##    <td style="text-align:center;"> 27.0 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2017 </td>
-    ##    <td style="text-align:center;"> 3.853333 </td>
-    ##    <td style="text-align:center;"> 5.361111 </td>
-    ##    <td style="text-align:center;"> 36.8 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2018 </td>
-    ##    <td style="text-align:center;"> 4.670685 </td>
-    ##    <td style="text-align:center;"> 4.901370 </td>
-    ##    <td style="text-align:center;"> 31.8 </td>
-    ##   </tr>
-    ##   <tr>
-    ##    <td style="text-align:center;"> 2019 </td>
-    ##    <td style="text-align:center;"> 4.235890 </td>
-    ##    <td style="text-align:center;"> 5.054794 </td>
-    ##    <td style="text-align:center;"> 31.8 </td>
-    ##   </tr>
-    ## </tbody>
-    ## </table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Stats Table
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+year
+</th>
+<th style="text-align:center;">
+sunshine_mean
+</th>
+<th style="text-align:center;">
+cloud_cover_mean
+</th>
+<th style="text-align:center;">
+precipitation_mean
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+2015
+</td>
+<td style="text-align:center;">
+4.131956
+</td>
+<td style="text-align:center;">
+4.771350
+</td>
+<td style="text-align:center;">
+51.6
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2016
+</td>
+<td style="text-align:center;">
+4.000822
+</td>
+<td style="text-align:center;">
+5.202740
+</td>
+<td style="text-align:center;">
+27.0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2017
+</td>
+<td style="text-align:center;">
+3.853333
+</td>
+<td style="text-align:center;">
+5.361111
+</td>
+<td style="text-align:center;">
+36.8
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+4.670685
+</td>
+<td style="text-align:center;">
+4.901370
+</td>
+<td style="text-align:center;">
+31.8
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2019
+</td>
+<td style="text-align:center;">
+4.235890
+</td>
+<td style="text-align:center;">
+5.054794
+</td>
+<td style="text-align:center;">
+31.8
+</td>
+</tr>
+</tbody>
+</table>
 
 For the UK in general
 

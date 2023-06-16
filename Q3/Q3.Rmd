@@ -29,26 +29,215 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 
 # Introduction {-}
 
+Coldplay and Metallica are two of the most famous bands of all time.
+
+This report examines major trends in their respective albums. 
 ....
 
-# Data  {-}
+# Coldplay {-}
 
 
 
-Discussion of data should be thorough with a table of statistics and ideally a figure.
+Coldplay is examined first. Albums are filtered to exlude any live or tour versions.
+
+By looking at danceability, it can be seen that "Ghost Stories" has the highest danceability. People find it difficult to dance to "Love in Tokyo".  
+
+When looking at popularity per album, it is a close call between Parachutes, A Rush of Blood to the Head, and A Head Full of Dreams. Love in Tokyo is the least popular album. 
+
+Comparing the studio version and live version of "Ghost Stories", the energy level in the live version is much higher. This implies that Coldplay is much better live
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
 ```{r }
+Coldplay <- read_csv("data/Coldplay.csv")
+categories <- unique(Coldplay$album_name)
+
+print(categories)
+
+
+
+filtered_coldplay <- subset(Coldplay, album_name %in% c("Parachutes", "A Rush of Blood to the Head", "X&Y", "Viva La Vida or Death and All His Friends", "Mylo Xyloto", "Ghost Stories", "A Head Full of Dreams", "Love in Tokyo", "Everyday Life", "Music Of The Spheres"))
+
+average_danceability <- aggregate(danceability ~ album_name, data = filtered_coldplay, FUN = mean)
+
+# View the average danceability per album
+print(average_danceability)
+
+
+ggplot(average_danceability, aes(x = album_name, y = danceability)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  xlab("Album Name") +
+  ylab("Average Danceability") +
+  ggtitle("Average Danceability per Album") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# filtered_coldplay %>% mutate(album = factor(album_name), Text = ifelse(popularity == min(popularity, na.rm = TRUE), glue::glue("Lowest: {album}, ({name}): popularity"), ifelse (popularity == max(popularity, na.rm = TRUE), glue::glue("Highest: {album}, ({name}): {popularity}"), NA_character_))) %>% 
+# 
+# ggplot() + geom_boxplot(aes(x = album_name, y = popularity, fill = album_name), alpha = 0.4) + geom_jitter(aes(x = album_name, y= popularity, fill = album_name), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per ColdPlay Album") +  theme(axis.text.x = element_blank())
+
+filtered_coldplay %>% mutate(album = factor(album_name), ) %>% 
+
+ggplot() + geom_boxplot(aes(x = album_name, y = popularity, fill = album_name), alpha = 0.4) + geom_jitter(aes(x = album_name, y= popularity, fill = album_name), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per ColdPlay Album") +  theme(axis.text.x = element_blank())
+
+#correlation
+
+Corr_overall_cold <- 
+filtered_coldplay %>% 
+  summarise(Corr = cor(popularity, danceability, method = "spearman", use = "pairwise.complete.obs"))
+
+Corr_overall_cold
+
+
+source("code/create_corr.R")
+
+col <- create_corr(filtered_coldplay, popularity, danceability, "Correlation between danceability and popularity")
+
+col
+
+Correlation <- 
+filtered_coldplay %>% 
+  group_by(album_name) %>% summarise(Correlation = cor(popularity, danceability, method = "spearman", use = "pairwise.complete.obs")) %>% tibble::as_tibble()
+
+Correlation
+
+table <- kable(Correlation, row.names = TRUE,
+      caption = 'Correlation between popularity and danceability for each Coldplay album',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
+
+
+subset_data_cold <- Coldplay %>%
+  filter(album_name %in% c("Ghost Stories", "Ghost Stories Live 2014"))
+
+average_energy <- aggregate(energy ~ album_name, data = subset_data_cold, FUN = mean)
+
+
+bar_plot <- ggplot(average_energy, aes(x = album_name, y = energy)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  xlab("Album") +
+  ylab("Average Energy") +
+  ggtitle("Average Energy for Metallica Albums")
 
 
 ```
 
+# Metallica {-}
+
+Averaging danceability per album for Metallica, we can see that their classic "Metallica" album score the highest danceability.
+
+Interestingly, it is also the most popular album. 
+
+```{r}
+categories <- unique(metallica$album)
+
+print(categories)
+
+average_popularity <- aggregate(popularity ~ album, data = metallica, FUN = mean) %>%  arrange(desc(popularity))
+
+average_popularity
+
+filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
+
+# filtered_metallica %>% mutate(album = factor(album), Text = ifelse(popularity == min(popularity, na.rm = TRUE), glue::glue("Lowest: {album}, ({name}): popularity"), ifelse (popularity == max(popularity, na.rm = TRUE), glue::glue("Highest: {album}, ({name}): {popularity}"), NA_character_))) %>% 
+# 
+# ggplot() + geom_boxplot(aes(x = album, y = popularity, fill = album), alpha = 0.4) + geom_jitter(aes(x = album, y= popularity, fill = album), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per Metallica Album") +  theme(axis.text.x = element_blank())
 
 
+filtered_metallica %>% mutate(album = factor(album), ) %>% 
+
+ggplot() + geom_boxplot(aes(x = album, y = popularity, fill = album), alpha = 0.4) + geom_jitter(aes(x = album, y= popularity, fill = album), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per Metallica Album") +  theme(axis.text.x = element_blank())
 
 
-#  Methodology \label{Meth} {-}
+#average danceability
+
+average_danceability <- aggregate(danceability ~ album, data = filtered_metallica, FUN = mean)
+
+print(average_danceability)
+
+
+ggplot(average_danceability, aes(x = album, y = danceability)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  xlab("Album Name") +
+  ylab("Average Danceability") +
+  ggtitle("Average Danceability per Album") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#look at correlation
+Corr <- 
+filtered_metallica %>% 
+  group_by(album) %>% summarise(Correlation = cor(popularity, danceability, method = "spearman", use = "pairwise.complete.obs")) %>% tibble::as_tibble()
+
+Corr
+
+table <- kable(Corr, row.names = TRUE,
+      caption = 'Correlation between popularity and danceability for each Metallica album',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
+
+#Overall correlation between danceability and popularity is very low for Metallica albums.
+Corr_overall <- 
+filtered_metallica %>% 
+  summarise(Corr = cor(popularity, danceability, method = "spearman", use = "pairwise.complete.obs")) 
+
+Corr_overall
+
+
+source("code/create_corr.R")
+
+met <- create_corr(filtered_metallica, popularity, danceability, "Correlation between danceability and popularity")
+
+met
+
+subset_data <- metallica %>%
+  filter(album %in% c("Some Kind Of Monster", "Some Kind Of Monster (Live)"))
+
+average_energy <- aggregate(energy ~ album, data = subset_data, FUN = mean)
+
+
+bar_plot <- ggplot(average_energy, aes(x = album, y = energy)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  xlab("Album") +
+  ylab("Average Energy") +
+  ggtitle("Average Energy for Metallica Albums")
+
+```
+
+
+# Broad Music {-}
+
+When looking more broadly at the music scene, the 10 most danceable songs on Spotify are listed below. The number one most danceable song in recent history is Leave Me Now by Herbert, receiving a danceability score of 0.986.
+
+```{r table-3, echo=TRUE, message=FALSE, warning=FALSE, results="asis"}
+
+top_10_dance_songs <- Broader_Spotify_Info %>%
+  top_n(10, danceability) %>%
+  select(name, artist, danceability) %>%
+  arrange(desc(danceability))
+
+# top 10 dancing songs
+print(top_10_dance_songs)
+
+table_dance <- kable(top_10_dance_songs, row.names = TRUE,
+      caption = 'Top 10 Most Danceable Songs',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table_dance
+
+```
+
 
 
 
@@ -59,26 +248,6 @@ Discussion of data should be thorough with a table of statistics and ideally a f
 <!-- \\beta = \\alpha^2 -->
 <!-- \end{align} -->
 <!-- $$ -->
-
-## Results {-}
-
-
-```{r table-1, echo=TRUE, message=FALSE, warning=FALSE, results="asis"}
-library(knitr)
-library(kableExtra)
-
-data <- mtcars[1:5,] %>% tibble::as_tibble()
-
-table <- kable(data, row.names = TRUE,
-      caption = 'Table with kable() and kablestyling()',
-      format = "html", booktabs = T) %>%
-        kable_styling(full_width = T,
-                      latex_options = c("striped",
-                                        "scale_down",
-                                        "HOLD_position"),
-                      font_size = 13)
-table
-```
 
 
 \newpage
