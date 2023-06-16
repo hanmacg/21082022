@@ -72,8 +72,8 @@ ggplot(data = london_weather, aes(x = date)) +
   theme_minimal()
 
 
-min(london_weather$min_temp)
-summarise(london_weather$mean_temp)
+# min(london_weather$min_temp)
+# summarise(london_weather$mean_temp)
 
 # colnames(london_weather)
 
@@ -173,40 +173,43 @@ library(knitr)
 
 # Convert the date column to a Date format if it's not already in the correct format
 
-# summary_stats <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>% 
-#   summarize(
-#     min_temp = min(min_temp, na.rm = TRUE),
-#     max_temp = max(max_temp, na.rm = TRUE),
-#     avg_temp = mean(mean_temp, na.rm =TRUE)
-#     
-# 
-#   ) 
-# 
-# 
-# kable(summary_stats, caption = "Stats Table", align = "c") %>%
-#     kable_styling()
+
+london$year <- lubridate::year(london$date)
+
+summary_stats <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>%
+  summarize(
+    min_temp = min(min_temp, na.rm = TRUE),
+    max_temp = max(max_temp, na.rm = TRUE),
+    avg_temp = mean(mean_temp, na.rm =TRUE)
+
+
+  )
+
+
+kable(summary_stats, caption = "Stats Table", align = "c") %>%
+    kable_styling()
 # 
 # # Print the formatted table
 # print(summary_stats)
 
-london$year <- lubridate::year(london$date)
 
-source("code/generate_summary_stats.R")
-summary_table <- generate_summary_stats(london, "2015-01-01")
-print(summary_table)
+
+# source("code/generate_summary_stats.R")
+# summary_table <- generate_summary_stats(london, "2015-01-01")
+# print(summary_table)
  
-# summary_stats_sun <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>% 
-#   summarize(
-#     sunshine_mean = mean(sunshine, na.rm = TRUE),
-#     cloud_cover_mean = mean (cloud_cover, na.rm = TRUE),
-#     precipitation_mean = max(precipitation, na.rm = TRUE)
-#   )
-# 
-# kable(summary_stats_sun, caption = "Stats Table", align = "c") %>%
-#     kable_styling()
-source("code/generate_summary_stats_extra")
-summary_table2 <- generate_summary_stats_extra(london, "2015-01-01")
-print(summary_table2)
+summary_stats_sun <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>%
+  summarize(
+    sunshine_mean = mean(sunshine, na.rm = TRUE),
+    cloud_cover_mean = mean (cloud_cover, na.rm = TRUE),
+    precipitation_mean = max(precipitation, na.rm = TRUE)
+  )
+
+kable(summary_stats_sun, caption = "Stats Table", align = "c") %>%
+    kable_styling()
+# source("code/generate_summary_stats_extra.R")
+# summary_table2 <- generate_summary_stats_extra(london, "2015-01-01")
+# print(summary_table2)
 
 
 ```
