@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells 466554 25.0    1002817 53.6   660388 35.3
-    ## Vcells 863606  6.6    8388608 64.0  1769776 13.6
+    ## Ncells 466672 25.0    1003154 53.6   660388 35.3
+    ## Vcells 864281  6.6    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
@@ -505,3 +505,363 @@ heat
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+
+# Question 3
+
+## Coldplay
+
+``` r
+Coldplay <- read_csv("Q3/data/Coldplay.csv")
+```
+
+    ## Rows: 232 Columns: 15
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr   (2): name, album_name
+    ## dbl  (11): duration, popularity, acousticness, danceability, energy, instrum...
+    ## lgl   (1): explicit
+    ## date  (1): release_date
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+filtered_coldplay <- subset(Coldplay, album_name %in% c("Parachutes", "A Rush of Blood to the Head", "X&Y", "Viva La Vida or Death and All His Friends", "Mylo Xyloto", "Ghost Stories", "A Head Full of Dreams", "Love in Tokyo", "Everyday Life", "Music Of The Spheres"))
+
+average_danceability <- aggregate(danceability ~ album_name, data = filtered_coldplay, FUN = mean)
+
+source("Q3/code/plot_average_danceability.R")
+dance_coldplay <- plot_average_danceability(average_danceability, album_name)
+```
+
+    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+    ## of ggplot2 3.3.4.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+``` r
+dance_coldplay
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+source("Q3/code/plot_popularity_band.R")
+cold_play_plot <- plot_popularity_band(filtered_coldplay, album_name, "Popularity per ColdPlay Album")
+cold_play_plot
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+
+``` r
+source("Q3/code/create_corr.R")
+col <- create_corr(filtered_coldplay, popularity, danceability, "Correlation between danceability and popularity")
+col
+```
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+![](README_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+
+## Metallica
+
+``` r
+metallica <- read.csv("Q3/data/metallica.csv")
+filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
+
+
+met_plot <- plot_popularity_band(filtered_metallica, album, "Popularity per Metallica Album")
+met_plot
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+# Question 4
+
+``` r
+library(knitr)
+library(kableExtra)
+
+titles <- read_csv("Q4_informal/data/titles.csv")
+```
+
+    ## Rows: 5806 Columns: 15
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (8): id, title, type, description, age_certification, genres, production...
+    ## dbl (7): release_year, runtime, seasons, imdb_score, imdb_votes, tmdb_popula...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+credits <- read_csv("Q4_informal/data/credits.csv")
+```
+
+    ## Rows: 77213 Columns: 5
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (4): id, name, character, role
+    ## dbl (1): person_id
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
+
+source("Q4_informal/code/calculate_actor_frequency.R")
+actor_frequency <- calculate_actor_frequency(merged_data)
+
+table <- kable(actor_frequency, row.names = TRUE,
+      caption = 'Top Actors on Netflix by IMDB Score and their Frequency in Netflix titles',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
+```
+
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Top Actors on Netflix by IMDB Score and their Frequency in Netflix
+titles
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Actor
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+André Sogliuzzo
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+Anna Gunn
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Betsy Brandt
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+Bob Odenkirk
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+Bryan Cranston
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+Cricket Leigh
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+David Attenborough
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+Dean Norris
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+Dee Bradley Baker
+</td>
+<td style="text-align:right;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+Greg Baldwin
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+Grey DeLisle
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+Jack De Sena
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+Jessie Flower
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+Jonathan Banks
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+Mae Whitman
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+Mayur More
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17
+</td>
+<td style="text-align:left;">
+Zach Tyler
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+source("Q4_informal/code/genre_plot.R")
+genre <- genre_plot(merged_data)
+genre
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+source("Q4_informal/code/plot_runtime_distribution.R")
+dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+``` r
+dist_movie
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+
+``` r
+dist_series <- plot_runtime_distribution(merged_data, "SHOW")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+
+``` r
+dist_series
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->

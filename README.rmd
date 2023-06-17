@@ -223,11 +223,11 @@ met_plot
 library(knitr)
 library(kableExtra)
 
-titles <- read_csv("Q4/data/titles.csv")
-credits <- read_csv("Q4/data/credits.csv")
+titles <- read_csv("Q4_informal/data/titles.csv")
+credits <- read_csv("Q4_informal/data/credits.csv")
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
-source("Q4/code/calculate_actor_frequency.R")
+source("Q4_informal/code/calculate_actor_frequency.R")
 actor_frequency <- calculate_actor_frequency(merged_data)
 
 table <- kable(actor_frequency, row.names = TRUE,
@@ -240,16 +240,16 @@ table <- kable(actor_frequency, row.names = TRUE,
                       font_size = 13)
 table
 
-source("Q4/code/genre_plot.R")
+source("Q4_informal/code/genre_plot.R")
 genre <- genre_plot(merged_data)
 genre
 
-source("Q4/code/plot_runtime_distribution.R")
+source("Q4_informal/code/plot_runtime_distribution.R")
 dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
-dist_movie
+#dist_movie
 
 dist_series <- plot_runtime_distribution(merged_data, "SHOW")
-dist_series
+#dist_series
 
 ```
 
