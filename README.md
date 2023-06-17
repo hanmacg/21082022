@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells 466672 25.0    1003154 53.6   660388 35.3
-    ## Vcells 864337  6.6    8388608 64.0  1769776 13.6
+    ## Ncells 466867 25.0    1003711 53.7   660388 35.3
+    ## Vcells 864972  6.6    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
@@ -470,16 +470,7 @@ filtered_coldplay <- subset(Coldplay, album_name %in% c("Parachutes", "A Rush of
 average_danceability <- aggregate(danceability ~ album_name, data = filtered_coldplay, FUN = mean)
 
 source("Q3/code/plot_average_danceability.R")
-dance_coldplay <- plot_average_danceability(average_danceability, album_name)
-```
-
-    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
-    ## of ggplot2 3.3.4.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
-
-``` r
+suppressWarnings(dance_coldplay <- plot_average_danceability(average_danceability, album_name))
 dance_coldplay
 ```
 
@@ -774,3 +765,162 @@ dist_series <- plot_runtime_distribution(merged_data, "SHOW")
 ``` r
 #dist_series
 ```
+
+# Question 5
+
+``` r
+suppressMessages(googleplaystore <- read_csv("Q5/data/googleplaystore.csv"))
+googleplaystore$Installs <- factor(googleplaystore$Installs, levels = c("1,000,000,000+", "500,000,000+", "100,000,000+", "50,000,000+", "10,000,000+", "5,000,000+", "1,000,000+", "500,000+", "100,000+", "50,000+", "10,000+", "5,000+", "1,000+", "500+", "100+", "50+", "10+", "5+", "1+", "0+", "0"), ordered = TRUE)
+
+
+category_avg_ratings <- googleplaystore %>% group_by(Category) %>%
+  summarize(Average_Rating = mean(Rating, na.rm = TRUE)) %>% top_n(10, Average_Rating) %>% arrange(desc(Average_Rating))
+
+table_app <- kable(category_avg_ratings, row.names = TRUE,
+      caption = 'Top 10 App Categories by Average Rating',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table_app
+```
+
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Top 10 App Categories by Average Rating
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Category
+</th>
+<th style="text-align:right;">
+Average_Rating
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+EVENTS
+</td>
+<td style="text-align:right;">
+4.435556
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+EDUCATION
+</td>
+<td style="text-align:right;">
+4.364000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+ART_AND_DESIGN
+</td>
+<td style="text-align:right;">
+4.359322
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+BOOKS_AND_REFERENCE
+</td>
+<td style="text-align:right;">
+4.343529
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+PERSONALIZATION
+</td>
+<td style="text-align:right;">
+4.334437
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+PARENTING
+</td>
+<td style="text-align:right;">
+4.300000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+BEAUTY
+</td>
+<td style="text-align:right;">
+4.278571
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+HEALTH_AND_FITNESS
+</td>
+<td style="text-align:right;">
+4.259058
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+GAME
+</td>
+<td style="text-align:right;">
+4.247969
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+SOCIAL
+</td>
+<td style="text-align:right;">
+4.247685
+</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+source("Q5/code/plot_app_installs.R")
+installp <- plot_app_installs(googleplaystore)
+installp
+```
+
+<img src="README_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />

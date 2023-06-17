@@ -16,7 +16,7 @@ output:
     # change to true for a self-contained document, but it'll be a litte slower for Pandoc to render
     self_contained: TRUE
 abstract: |
-    The key insights show that....
+    The key insights into popular app catgories by ratings and installations show that Education is a good category to explore for the new app. 
 
 ---
 
@@ -33,7 +33,7 @@ The report gives insights into App designs for the development of a great new ap
 
 # Data  {-}
 
-...
+Data from Google Play Store has plentiful information on the different app categories, ratings, reviews, and installations. 
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
@@ -49,19 +49,25 @@ categories <- unique(googleplaystore$Category)
 googleplaystore$Installs <- factor(googleplaystore$Installs, levels = c("1,000,000,000+", "500,000,000+", "100,000,000+", "50,000,000+", "10,000,000+", "5,000,000+", "1,000,000+", "500,000+", "100,000+", "50,000+", "10,000+", "5,000+", "1,000+", "500+", "100+", "50+", "10+", "5+", "1+", "0+", "0"), ordered = TRUE)
 ```
 
-Table 
+Given that we would like our potential app to be popular and of good quality, it is important to look at which categories of apps typically achieve high ratings. For some categories, it may be difficult to get it right. 
+
+The table below shows the top ten categories according to highest rating. Ratings are averaged across categories and then ranked from highest to lowest. Events apps typically get the highest ratings on average, followed by Education and Art and Design. In these categories, its generally possible to achieve high quality and obtain high ratings. 
+ 
 ```{r}
 ##
-category_avg_ratings <- googleplaystore %>%
-  group_by(Category) %>%
-  summarize(Average_Rating = mean(Rating, na.rm = TRUE))
+category_avg_ratings <- googleplaystore %>% group_by(Category) %>%
+  summarize(Average_Rating = mean(Rating, na.rm = TRUE)) %>% top_n(10, Average_Rating) %>% arrange(desc(Average_Rating))
 
-# Find top 10 categories based on rating
-top_10_categories <- category_avg_ratings %>%
-  top_n(10, Average_Rating) %>%
-  arrange(desc(Average_Rating))
+# category_avg_ratings <- googleplaystore %>%
+#   group_by(Category) %>%
+#   summarize(Average_Rating = mean(Rating, na.rm = TRUE))
+# 
+# # Find top 10 categories based on rating
+# top_10_categories <- category_avg_ratings %>%
+#   top_n(10, Average_Rating) %>%
+#   arrange(desc(Average_Rating))
 
-table_app <- kable(top_10_categories, row.names = TRUE,
+table_app <- kable(category_avg_ratings, row.names = TRUE,
       caption = 'Top 10 App Categories by Average Rating',
       format = "html", booktabs = T) %>%
         kable_styling(full_width = T,
@@ -72,28 +78,40 @@ table_app <- kable(top_10_categories, row.names = TRUE,
 table_app
 ```
 
+These categories are further examined. For our app to be successful, we want the app to reach a wide range of people and get high levels of installations. 
+
+The figure below plots how many apps there are per category. It also displays the number of installations per category.
+
+It can be seen that gaming its the most popular app category. This indicates that the market for game apps may be over-saturated. There are also Game apps that clearly haven't been super successful, given that there are a few that received less than 500 installs (seen in the lighter shades of yellow and green). Although many games apps have received an exorbitant number of installations, an app in gaming may be too risky. 
+
+In contrast, Education apps are less common and, therefore, the market for education apps is not yet over-saturated. Additionally, it appears that education apps received high levels of installations. This may be a category in which to develop the app. 
 
 ```{r Figure1, warning = FALSE, fig.align = 'center', fig.cap =  "Number of Apps per category and number of installs \\label{Figure1}", fig.ext = "png", fig.height = 8, fig.width = 7}
 # Next we filter data to only include those categories
 
-filtered_data <- googleplaystore %>%
-  filter(Category %in% c("EVENTS", "EDUCATION", "ART_AND_DESIGN", "BOOKS_AND_REFERENCE", "PERSONALIZATION", "PARENTING", "BEAUTY", "HEALTH_AND_FITNESS", "GAME", "SOCIAL"))
+# filtered_data <- googleplaystore %>%
+#   filter(Category %in% c("EVENTS", "EDUCATION", "ART_AND_DESIGN", "BOOKS_AND_REFERENCE", "PERSONALIZATION", "PARENTING", "BEAUTY", "HEALTH_AND_FITNESS", "GAME", "SOCIAL"))
 
 
-ggplot(filtered_data, aes(x = Category, fill = Installs)) +
-  geom_bar() +
-  labs(x = "", y = "Count", fill = "Installs") +
-  ggtitle("Number of App's and Associated Installs by Category") + theme_minimal() +theme(axis.text.x = element_text(size = 8 , angle = 45, hjust = 1)) + theme(legend.key.size = unit(0.5, "cm"),
-                                                                                        legend.key.height = unit(0.5, "cm"),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 8),
-        plot.title = element_text(size = 10, margin = margin(b = 20)),
-        axis.title.y = element_text(size = 10),
-        legend.position = "right",
-    legend.box = "vertical",  # Display the legend in a vertical layout
-    legend.margin = margin(0, 0, 0, 0)  # Adjust the margin around the legend
-  ) 
+source("code/plot_app_installs.R")
+installp <- plot_app_installs(googleplaystore)
+installp 
 
+
+# ggplot(filtered_data, aes(x = Category, fill = Installs)) +
+#   geom_bar() +
+#   labs(x = "", y = "Count", fill = "Installs") +
+#   ggtitle("Number of App's and Associated Installs by Category") + theme_minimal() +theme(axis.text.x = element_text(size = 8 , angle = 45, hjust = 1)) + theme(legend.key.size = unit(0.5, "cm"),
+#                                                                                         legend.key.height = unit(0.5, "cm"),
+#         legend.text = element_text(size = 8),
+#         legend.title = element_text(size = 8),
+#         plot.title = element_text(size = 10, margin = margin(b = 20)),
+#         axis.title.y = element_text(size = 10),
+#         legend.position = "right",
+#     legend.box = "vertical",  # Display the legend in a vertical layout
+#     legend.margin = margin(0, 0, 0, 0)  # Adjust the margin around the legend
+#   ) 
+# 
 
 googleplaystore$`Last Updated` <- as.Date(googleplaystore$`Last Updated`, format = "%B %d, %Y")
 
@@ -107,10 +125,7 @@ googleplaystore$`Last Updated` <- format(googleplaystore$`Last Updated`, "%Y-%m-
 
 
 
-#  Methodology \label{Meth} {-}
 
-## Subsection {-}
-Ideally do not overuse subsections. It equates to bad writing.^[This is an example of a footnote by the way. Something that should also not be overused.]
 
 
 
@@ -122,31 +137,12 @@ Ideally do not overuse subsections. It equates to bad writing.^[This is an examp
 <!-- \end{align} -->
 <!-- $$ -->
 
-## Results {-}
-
-
-```{r table-1, echo=TRUE, message=FALSE, warning=FALSE, results="asis"}
-library(knitr)
-library(kableExtra)
-
-data <- mtcars[1:5,] %>% tibble::as_tibble()
-
-table <- kable(data, row.names = TRUE,
-      caption = 'Table with kable() and kablestyling()',
-      format = "html", booktabs = T) %>%
-        kable_styling(full_width = T,
-                      latex_options = c("striped",
-                                        "scale_down",
-                                        "HOLD_position"),
-                      font_size = 13)
-table
-```
-
 
 \newpage
 
+# Conclusion {-}
 
-# Model summary
+From this data, we have determined the most popular app categories by ratings.We have also seen the quantity of apps in each category and number of installations per category. Given that Education generally receives high ratings, is not over-saturated with apps, and generally receives high levels of installations, it seems like a good area in which to proceed with our app development. 
 
 
 
