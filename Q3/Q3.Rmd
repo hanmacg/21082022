@@ -128,14 +128,6 @@ source("code/create_bar_plot.R")
 bar_plot_cold <- create_bar_plot(average_energy_cold, album_name, energy, "Album", "Average Energy", "Average Energy for Coldplay Albums")
 bar_plot_cold
 
-# bar_plot <- ggplot(average_energy, aes(x = album_name, y = energy)) +
-#   geom_bar(stat = "identity", fill = "steelblue") +
-#   xlab("Album") +
-#   ylab("Average Energy") +
-#   ggtitle("Average Energy for Coldplay Albums") + theme_minimal()
-# 
-# bar_plot
-
 
 ```
 
@@ -228,13 +220,6 @@ filter(album %in% c("Some Kind Of Monster", "Some Kind Of Monster (Live)")) %>% 
 source("code/create_bar_plot.R")
 bar_plot_met <- create_bar_plot(average_energy, album, energy, "Album", "Average Energy", "Average Energy for Metallica Albums")
 bar_plot_met
-
-# bar_plot_met <- ggplot(average_energy, aes(x = album, y = energy)) +
-#   geom_bar(stat = "identity", fill = "steelblue") +
-#   xlab("Album") +
-#   ylab("Average Energy") +
-#   ggtitle("Average Energy for Metallica Albums")
-# bar_plot_met
 
 ```
 
