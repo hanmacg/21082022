@@ -3,7 +3,7 @@
 # Remove comments and add values where applicable.
 # The descriptions below should be self-explanatory
 
-title: "21082022_Question 1"
+title: "COVID-19"
 #subtitle: "This will appear as Right Header"
 
 documentclass: "elsarticle"
@@ -92,7 +92,7 @@ output:
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
 abstract: |
-  Abstract to be written here. 
+  This report analyses the global and country-specific trends associated with the COVID-19 pandemic. 
 ---
 
 <!-- First: Set your default preferences for chunk options: -->
@@ -108,11 +108,11 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 # Lets load in example data, and see how this can be stored and later called from your 'data' folder.
 if(!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
-Example_data <- Texevier::Ex_Dat
+
 
 # Notice that as you are working in a .Rproj file (I am assuming you are) - the relative paths of your directories start at your specified root.
 # This means that when working in a .Rproj file, you never need to use getwd() - it is assumed as your base root automatically.
-write_rds(Example_data, path = "data/Example_data.rds")
+
 
 ```
 
@@ -123,13 +123,11 @@ write_rds(Example_data, path = "data/Example_data.rds")
 
 # Introduction \label{Introduction}
 
-I have been tasked to examine the evolution of the Covid-19 outbreak
-
-
+I have been tasked to examine the evolution of the Covid-19 outbreak.
 
 # Data  {-}
 
-My data looks at Covid-19 globally.
+The data looks at Covid-19 globally.
 
 ```{r}
 owid_covid_data <- read_csv("data/owid-covid-data.csv")
@@ -137,25 +135,23 @@ owid_covid_data <- read_csv("data/owid-covid-data.csv")
 Deaths_by_cause <- read_csv("data/Deaths_by_cause.csv")
 covid_data_description <- read_csv("data/covid_data_description.csv")
 
-
-#merged_data <- merge(owid_covid_data, Deaths_by_cause, by.x = "iso_code", by.y = "Code", all.x = TRUE)
-
 combined_data <- bind_rows(owid_covid_data, Deaths_by_cause)
 
 ```
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
-First I want to provide insights using the dataset into how African countries experienced COVID compared to other regions.
+## Experience of African Countries
 
-First, the average total cases for Africa is plotted over time. They steeply rose over time. The next figure compares Africa across continents. It had the lowest increase (flattest slope) in covid cases over time. Europe, on the other hand faced rapid increases in COVID-19. 
+I provide insights into how African countries experienced the COVID-19 pandemic compared to other regions.
 
-Africa also has the least fully vaccinated people per hundred people. This is possibly due to being underresourced. 
+First, the average total cases for Africa is plotted over time. They steeply rose over time. The next figure compares Africa across continents. It had the lowest increase (flattest slope) in COVID cases over time. Europe, on the other hand, faced rapid increases in COVID-19, rising particularly steeply throughout. 
 
-```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+Africa also has the least fully vaccinated people per hundred people. This is possibly due to being under-resourced. Oceana, mostly comprising Australia, has the highest population of fully vaccinated people. 
 
-  # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
-  # Set WD below to your project's working directory.
+```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "COVID-19 Cases per Million \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+
+
 first_date <- min(owid_covid_data$date)
 #print(first_date)
 
@@ -177,42 +173,8 @@ africa_data$date <- as.Date(africa_data$date)
 ggplot(average_cases_per_million, aes(x = date, y = average_cases_per_million)) +
   geom_line() +
   labs(x = "Date", y = "Average Cases per Million") +
-  ggtitle("Average COVID-19 Cases per Million in African Countries over Time")
+  ggtitle("Average COVID-19 Cases per Million in African Countries") + theme_minimal()
 
-# continent_categories <- unique(combined_data$continent)
-# print(continent_categories)
-# 
-# ggplot(owid_covid_data, aes(x = date, y = total_cases_per_million)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Average Cases per Million") +
-#   ggtitle("Average COVID-19 Cases per Million over Time") +
-#   facet_wrap(~ continent, scales = "free")
-
-# #For all countries
-# owid_covid_data$date <- as.Date(owid_covid_data$date)
-# 
-# # Figure 1:  Calculate the average cases per million per date for each continent
-# average_cases_per_million <- owid_covid_data %>%
-#   group_by(date, continent) %>%
-#   summarize(average_cases_per_million = mean(total_cases_per_million, na.rm = TRUE))
-# 
-# # Create the ggplot line plot for each continent
-# ggplot(average_cases_per_million, aes(x = date, y = average_cases_per_million, color = continent)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Average Cases per Million") +
-#   ggtitle("Average COVID-19 Cases per Million by Continent over Time")
-# 
-# 
-# #Figure 2: for vaccinations
-# average_vacc_per_million <- owid_covid_data %>%
-#   group_by(date, continent) %>%
-#   summarize(average_vacc = mean(people_fully_vaccinated_per_hundred, na.rm = TRUE))
-# 
-# # Create the ggplot line plot for each continent
-# ggplot(average_vacc_per_million, aes(x = date, y = average_vacc, color = continent)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Average Fully Vaccinated") +
-#   ggtitle("Average Fully Vaccinated per Hundred People")
 
 ##FUNCTIONS########
 source("code/plot_covid_and_vaccination.R")
@@ -223,29 +185,23 @@ plots$plot_vaccinations  # Figure 2: Average Fully Vaccinated per Hundred
 
 ```
 
-Next I want to examine whether countries with specific concentrated groupings (e.g. more poverty, higher prevalence of smokers, higher general life expectancy and elderly populations) displayed distinct patterns in the severity of their Covid experience.
+## Severity of COVID-19 in Countries with High vs Low Life Expectancy
+
+Next I want to examine distinct patterns in the severity of their COVID experience in countries with higher and lower general life expectancy. By averaging life expectancy across locations, the five countries with the lowest life expectancy are Central African Republic, Chad, Lesotho, Nigeria and Sierra Leone.
 
 From the below tables, we can see that Africa has the lowest Life Expectancy and Europe has the highest.
 
+Among countries with the lowest life expectancy, total deaths remained relatively low except for Nigeria, where deaths roses rapidly from the beginning of 2020 to the end of 2022. Lesotho experienced the next highest number of deaths.
 
+The five countries/locations with the highest life expectancies were Monaco (86.8 years), San Marino, Hong Kong, Japan, and Macao. Among countries with the highest life expectancy, Japan had the highest number of deaths, reaching over 30 000 around quarter 3 of 2022. Deaths were very low in the locations of Monaco, San Marino, and Macao. 
 
-Among countries with the lowest life expectancy, total deaths remained relatively low except for the Central African Republic, where deaths roses rapidly from the beginning of 2020 to the end of 2022. Lesotho experienced the next highest number of deaths.
-
-Among countries with the highest life expectancy, Japan had the highest number of deaths, reaching over 30 000 around quarter 3 of 2022. Deaths were very low in the locations of Monaco, San Marino, and Macao. 
-
-Total cases per million where the highest in Lesotho, probably owing to its small population. For areas with high life expectancy, San Marino experienced the highest number of cases per million people, followed by Macao. 
 
 ```{r Figure2, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
-
-
-
-if ("female_smokers" %in% colnames(combined_data)) {
-  print("Variable 'female_smokers' exists in the dataset.")
-} else {
-  print("Variable 'female_smokers' does not exist in the dataset.")
-}
-
-
+# if ("female_smokers" %in% colnames(combined_data)) {
+#   print("Variable 'female_smokers' exists in the dataset.")
+# } else {
+#   print("Variable 'female_smokers' does not exist in the dataset.")
+# }
 
 average_life_expectancy <- combined_data %>%
   group_by(location) %>%
@@ -268,7 +224,7 @@ lowest_life_expectancy_regions <- average_life_expectancy %>%
   top_n(5, wt = -average_life_expectancy)
 
 # Print the regions with the lowest life expectancy
-print(lowest_life_expectancy_regions)
+# print(lowest_life_expectancy_regions)
 
 ##FUNCTION BEGINS
 
@@ -276,10 +232,6 @@ lowest_le <- combined_data %>%
 filter(location %in% c("Chad", "Lesotho", "Central African Republic", "Nigeria", "Sierra Leone"))
 Total_Deaths <- lowest_le$total_deaths
 
-# ggplot(lowest_le, aes(x = date, y = total_deaths, color = location)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Total Deaths") +
-#   ggtitle("Total Deaths over Time in Regions with Lowest LE") + theme_minimal()
 
 source("code/plot_lowest_le.R")
 p <- plot_lowest_le(lowest_le, Total_Deaths, "Total Deaths over Time in Regions with Lowest LE")
@@ -291,26 +243,22 @@ highest_le <- combined_data %>%
 filter(location %in% c("Hong Kong", "Japan", "Macao", "Monaco", "San Marino"))
 Total_deaths <- highest_le$total_deaths
 
-# ggplot(highest_le, aes(x = date, y = total_deaths, color = location)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Total Deaths") +
-#   ggtitle("Total Deaths over Time in Regions with Lowest LE") + theme_minimal()
 
 q <- plot_lowest_le(highest_le, Total_deaths, "Total Deaths over Time in Regions with Highest LE")
 q
+```
 
+Total cases per million where the highest in Lesotho, probably owing to its small population. For areas with high life expectancy, San Marino experienced the highest number of cases per million people, followed by Macao. 
+
+```{r Figure3, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure3}", fig.height = 3, fig.width = 6, dev = 'png'}
 #total covid cases in lowest LE
 
-print(lowest_life_expectancy_regions)
+# print(lowest_life_expectancy_regions)
 
 lowest_le <- combined_data %>%
 filter(location %in% c("Chad", "Lesotho", "Central African Republic", "Nigeria", "Sierra Leone"))
 Total_Cases_per_Million <- lowest_le$total_cases_per_million
 
-# ggplot(lowest_le, aes(x = date, y = total_cases_per_million, color = location)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Total Deaths") +
-#   ggtitle("Total Cases per Million over Time in Regions with Lowest LE") + theme_minimal()
 
 r <- plot_lowest_le(lowest_le, Total_Cases_per_Million, "Total Cases per Million over Time in Regions with Lowest LE")
 r
@@ -329,24 +277,16 @@ s
 
 ```
 
-Show how quickly different regions increased their hospitalization facilities, and whether this led or lagged ICU admissions.
-
-Hospitalisation and ICU admission are plotted.
-
-Plotting across continent, we can see that each continent experienced waves of hospitalisation at different times. Europe, North America and Asia experienced the highest shocks in hospitalisations. Hospitalisation in Africa were always low. 
-
-Europe and South America experienced the highest numbers of weekly ICU admission per million . This is interesting because South America did not have as sharp spikes in general hospitalisations compared to other continents. 
-
-Plotting hospital patients and ICU patients, it can be seen that they follow the same trends and waves. ICU patient numbers always increase globally when global hospitalisations increase. Therefore, hospitalisation led ICU hospitalisation. 
+## Changes in General and ICU Hospitalisation
 
 
-We can also see that there is a positive correlation (0.6) between the numberr of hospital patients and number of tests. Therefore, the number of tests conducted can act as a good indicator of hospitalisation. 
+Hospitalisations and ICU admissions are plotted.
 
-```{r}
-# ggplot(lowest_le, aes(x = date, y = hosp_patients_per_million, fill = location)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Total Deaths") +
-#   ggtitle("Total Cases per Million over Time in Regions with Highest LE") + theme_minimal()
+Plotting across continent, we can see that each continent experienced waves of hospitalisation at different times. Europe, North America and Asia experienced the highest shocks in hospitalisations. Hospitalisations in Africa were always low. This is expected given the cases were fewer.  
+
+
+
+```{r Figure4, warning =  FALSE, fig.align = 'center', fig.cap = "Hospital Admissions \\label{Figure4}", fig.height = 4, fig.width = 6, dev = 'png'}
 
  
 filtered_data <- combined_data %>%
@@ -355,30 +295,19 @@ filtered_data <- combined_data %>%
 # # Convert the "date" variable to a date format
 # filtered_data$date <- as.Date(filtered_data$date)
 
-# Create the ggplot line plot
-# ggplot(filtered_data, aes(x = date, y = weekly_hosp_admissions_per_million, fill = continent)) +
-#   geom_bar(stat = "identity", position = "dodge") +
-#   labs(x = "Date", y = "Weekly Hospital Admissions per Million") +
-#   ggtitle("Weekly Hospital Admissions per Million among Continents") +
-#   scale_fill_discrete(name = "Continent")
-# 
-# ggplot(filtered_data, aes(x = date, y = weekly_icu_admissions_per_million, fill = continent)) +
-#   geom_bar(stat = "identity", position = "dodge") +
-#   labs(x = "Date", y = "Weekly ICU Admissions per Million") +
-#   ggtitle("Weekly ICU Admissions per Million for Continents") +
-#   scale_fill_discrete(name = "Continent")
-
 source("code/plot_filtered_data.R")
 
-hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million)
+hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million, "Weekly Hospital Admissions Per Million", "Weekly Hospital Admissions among Continents")
 hosp
 ```
 
+Europe and South America experienced the highest numbers of weekly ICU admission per million . This is interesting because South America did not have as sharp spikes in general hospitalisations compared to other continents. 
 
-```{r}
+```{r Figure5, warning =  FALSE, fig.align = 'center', fig.cap = "Hospital Admissions \\label{Figure5}", fig.height = 4, fig.width = 6, dev = 'png'}
+
 #next plot
 #
-icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million)
+icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million, "Weekly ICU Admissions Per Million", "Weekly ICU Admissions among Continents")
 icu
 
 #Worldwide, we see that hospitalisations and ICU admissions followed similar waves. 
@@ -391,6 +320,10 @@ icu
 ```
 
 
+Plotting hospital patients and ICU patients, it can be seen that they follow the same trends and waves. ICU patient numbers always increase globally when global hospitalisations increase. Therefore, general hospitalisation led ICU hospitalisations.
+
+We can also see that there is a positive correlation (0.6) between the numberr of hospital patients and number of tests. Therefore, the number of tests conducted can act as a good indicator of hospitalisation. 
+
 ```{r}
 source("code/plot_hospital_icu_data.R")
 globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
@@ -402,33 +335,17 @@ correlation <- cor(combined_data$hosp_patients, combined_data$total_tests, use =
 # Print the correlation coefficient
 print(correlation)
 
+```
 
+In South Africa, there are clear waves in hospitalisations. This shows how hospitalisations were clustered mostly likely when during times when the virus spread was high. 
 
-# ggplot(filtered_data, aes(x = date, y = weekly_hosp_admissions_per_million, color = continent)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Weekly Hospital Admissions per Million") +
-#   ggtitle("Weekly Hospital Admissions per Million for Selected Locations") +
-#   scale_color_discrete(name = "Location")
-
-
-
+```{r}
 #SOUTH AFRICA
 south_africa_data <- combined_data %>%
   filter(location == "South Africa")
 
 # Convert the "date" variable to a date format
 south_africa_data$date <- as.Date(south_africa_data$date)
-
-
-# Create the ggplot line plot
-# ggplot(africa_data, aes(x = date)) +
-#   geom_line(aes(y = weekly_icu_admissions_per_million, color = "ICU Admissions")) +
-#   geom_line(aes(y = weekly_hosp_admissions_per_million, color = "Hospital Admissions")) +
-#   labs(x = "Date", y = "Admissions per Million",
-#        color = "Admission Type") +
-#   ggtitle("Weekly ICU and Hospital Admissions per Million in South Africa") +
-#   scale_color_manual(values = c("red", "blue"),
-#                      labels = c("ICU Admissions", "Hospital Admissions"))
 
 
 south_africa_data <- combined_data %>%
@@ -447,30 +364,8 @@ monthly_data <- south_africa_data %>%
 ggplot(monthly_data, aes(x = month, y = monthly_avg_hosp_admissions)) +
   geom_line() +
   labs(x = "Month", y = "Monthly Average Hospital Admissions per Million") +
-  ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
-
-
-# # Aggregate the data to monthly level
-# monthly_data <- africa_data %>%
-#   mutate(month = floor_date(date, unit = "month")) %>%
-#   group_by(month) %>%
-#   summarize(monthly_avg_icu_admissions = mean(weekly_icu_admissions_per_million, na.rm = TRUE))
-# 
-# # Create the ggplot line plot
-# ggplot(monthly_data, aes(x = month, y = monthly_avg_icu_admissions)) +
-#   geom_line() +
-#   labs(x = "Month", y = "Monthly Average Hospital Admissions per Million") +
-#   ggtitle("Monthly Average Hospital Admissions per Million in South Africa")
-
-
-
-
-
-
-
-
-
-
+  ggtitle("Monthly Average Hospital Admissions per Million in South Africa") +
+    theme_minimal()
 
 ```
 
@@ -524,9 +419,13 @@ ggplot(monthly_data, aes(x = month, y = monthly_avg_hosp_admissions)) +
 
 
 
-# Conclusion
+# Discussion and Conclusion {-}
 
-In conclusion, Covid-19 wrecked havoc throughout the world, leading to increase deaths and hospitalisations.
+In conclusion, Covid-19 wrecked havoc throughout the world, leading to increase deaths and hospitalisations. Africa experienced less COVID-19 cases compared to the rest of the world and consequently, less deaths. This could also be due to a lack of proper recording of COVID data.
+
+By looking at countries with different life expectancies, the results are mixed. Total deaths were high and approximately the same in Japan and Nigeria, despite having very different life expectancies. Deaths were relatively low in the other specified areas. Total cases per million were typically higher in countries with high life expectancy. By not having substantially higher deaths in these countries, it is likely that citizens in high life expectancy countries had strong enough immune systems to cope with the virus. 
+
+It is clear that COVID presented itself in waves and these waves impacted different continents at different times. ICU hospitalisations were strongly associated with Hospital admissions.
 
 <!-- Make title of bibliography here: -->
 <!-- \newpage -->

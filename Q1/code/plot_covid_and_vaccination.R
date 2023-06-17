@@ -11,7 +11,7 @@ plot_covid_and_vaccination <- function(data) {
     p1 <- ggplot(average_cases_per_million, aes(x = date, y = average_cases_per_million, color = continent)) +
         geom_line() +
         labs(x = "Date", y = "Average Cases per Million") +
-        ggtitle("Average COVID-19 Cases per Million by Continent over Time")
+        ggtitle("Average COVID-19 Cases per Million by Continent over Time") + theme_minimal()
 
     # Figure 2: Calculate the average fully vaccinated per hundred people per date for each continent
     average_vacc_per_hundred <- data %>%
@@ -22,7 +22,7 @@ plot_covid_and_vaccination <- function(data) {
     p2 <- ggplot(average_vacc_per_hundred, aes(x = date, y = average_vacc_per_hundred, color = continent)) +
         geom_line() +
         labs(x = "Date", y = "Average Fully Vaccinated") +
-        ggtitle("Average Fully Vaccinated per Hundred People")
+        ggtitle("Average Fully Vaccinated per Hundred People") + theme_minimal()
 
     # Return a list containing the two plots
     list(plot_cases = p1, plot_vaccinations = p2)

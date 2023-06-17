@@ -163,7 +163,7 @@
 
 \begin{frontmatter}  %
 
-\title{21082022\_Question 1}
+\title{COVID-19}
 
 % Set to FALSE if wanting to remove title (for submission)
 
@@ -182,7 +182,8 @@
 
 \begin{abstract}
 \small{
-Abstract to be written here.
+This report analyses the global and country-specific trends associated
+with the COVID-19 pandemic.
 }
 \end{abstract}
 
@@ -225,24 +226,30 @@ Abstract to be written here.
 \section{\texorpdfstring{Introduction
 \label{Introduction}}{Introduction }}\label{introduction}}
 
-I have been tasked to examine the evolution of the Covid-19 outbreak
+I have been tasked to examine the evolution of the Covid-19 outbreak.
 
 \hypertarget{data}{%
 \section*{Data}\label{data}}
 \addcontentsline{toc}{section}{Data}
 
-My data looks at Covid-19 globally.
+The data looks at Covid-19 globally.
 
-First I want to provide insights using the dataset into how African
-countries experienced COVID compared to other regions.
+\hypertarget{experience-of-african-countries}{%
+\subsection{Experience of African
+Countries}\label{experience-of-african-countries}}
+
+I provide insights into how African countries experienced the COVID-19
+pandemic compared to other regions.
 
 First, the average total cases for Africa is plotted over time. They
 steeply rose over time. The next figure compares Africa across
-continents. It had the lowest increase (flattest slope) in covid cases
-over time. Europe, on the other hand faced rapid increases in COVID-19.
+continents. It had the lowest increase (flattest slope) in COVID cases
+over time. Europe, on the other hand, faced rapid increases in COVID-19,
+rising particularly steeply throughout.
 
 Africa also has the least fully vaccinated people per hundred people.
-This is possibly due to being underresourced.
+This is possibly due to being under-resourced. Oceana, mostly comprising
+Australia, has the highest population of fully vaccinated people.
 
 \begin{figure}[H]
 
@@ -250,7 +257,7 @@ This is possibly due to being underresourced.
 
 }
 
-\caption{Caption Here \label{Figure1}}\label{fig:Figure1-1}
+\caption{COVID-19 Cases per Million \label{Figure1}}\label{fig:Figure1-1}
 \end{figure}
 \begin{figure}[H]
 
@@ -258,7 +265,7 @@ This is possibly due to being underresourced.
 
 }
 
-\caption{Caption Here \label{Figure1}}\label{fig:Figure1-2}
+\caption{COVID-19 Cases per Million \label{Figure1}}\label{fig:Figure1-2}
 \end{figure}
 \begin{figure}[H]
 
@@ -266,34 +273,32 @@ This is possibly due to being underresourced.
 
 }
 
-\caption{Caption Here \label{Figure1}}\label{fig:Figure1-3}
+\caption{COVID-19 Cases per Million \label{Figure1}}\label{fig:Figure1-3}
 \end{figure}
 
-Next I want to examine whether countries with specific concentrated
-groupings (e.g.~more poverty, higher prevalence of smokers, higher
-general life expectancy and elderly populations) displayed distinct
-patterns in the severity of their Covid experience.
+\hypertarget{severity-of-covid-19-in-countries-with-high-vs-low-life-expectancy}{%
+\subsection{Severity of COVID-19 in Countries with High vs Low Life
+Expectancy}\label{severity-of-covid-19-in-countries-with-high-vs-low-life-expectancy}}
+
+Next I want to examine distinct patterns in the severity of their COVID
+experience in countries with higher and lower general life expectancy.
+By averaging life expectancy across locations, the five countries with
+the lowest life expectancy are Central African Republic, Chad, Lesotho,
+Nigeria and Sierra Leone.
 
 From the below tables, we can see that Africa has the lowest Life
 Expectancy and Europe has the highest.
 
 Among countries with the lowest life expectancy, total deaths remained
-relatively low except for the Central African Republic, where deaths
-roses rapidly from the beginning of 2020 to the end of 2022. Lesotho
-experienced the next highest number of deaths.
+relatively low except for Nigeria, where deaths roses rapidly from the
+beginning of 2020 to the end of 2022. Lesotho experienced the next
+highest number of deaths.
 
-Among countries with the highest life expectancy, Japan had the highest
-number of deaths, reaching over 30 000 around quarter 3 of 2022. Deaths
-were very low in the locations of Monaco, San Marino, and Macao.
-
-Total cases per million where the highest in Lesotho, probably owing to
-its small population. For areas with high life expectancy, San Marino
-experienced the highest number of cases per million people, followed by
-Macao.
-
-\begin{verbatim}
-## [1] "Variable 'female_smokers' exists in the dataset."
-\end{verbatim}
+The five countries/locations with the highest life expectancies were
+Monaco (86.8 years), San Marino, Hong Kong, Japan, and Macao. Among
+countries with the highest life expectancy, Japan had the highest number
+of deaths, reaching over 30 000 around quarter 3 of 2022. Deaths were
+very low in the locations of Monaco, San Marino, and Macao.
 
 \begin{verbatim}
 ## # A tibble: 5 x 2
@@ -304,17 +309,6 @@ Macao.
 ## 3 Macao                         84.2
 ## 4 Monaco                        86.8
 ## 5 San Marino                    85.0
-\end{verbatim}
-
-\begin{verbatim}
-## # A tibble: 5 x 2
-##   location                 average_life_expectancy
-##   <chr>                                      <dbl>
-## 1 Central African Republic                    53.3
-## 2 Chad                                        54.2
-## 3 Lesotho                                     54.3
-## 4 Nigeria                                     54.7
-## 5 Sierra Leone                                54.7
 \end{verbatim}
 
 \begin{figure}[H]
@@ -334,53 +328,67 @@ Macao.
 \caption{Caption Here \label{Figure2}}\label{fig:Figure2-2}
 \end{figure}
 
-\begin{verbatim}
-## # A tibble: 5 x 2
-##   location                 average_life_expectancy
-##   <chr>                                      <dbl>
-## 1 Central African Republic                    53.3
-## 2 Chad                                        54.2
-## 3 Lesotho                                     54.3
-## 4 Nigeria                                     54.7
-## 5 Sierra Leone                                54.7
-\end{verbatim}
+Total cases per million where the highest in Lesotho, probably owing to
+its small population. For areas with high life expectancy, San Marino
+experienced the highest number of cases per million people, followed by
+Macao.
 
 \begin{figure}[H]
 
-{\centering \includegraphics{Q1_files/figure-latex/Figure2-3} 
+{\centering \includegraphics{Q1_files/figure-latex/Figure3-1} 
 
 }
 
-\caption{Caption Here \label{Figure2}}\label{fig:Figure2-3}
+\caption{Caption Here \label{Figure3}}\label{fig:Figure3-1}
 \end{figure}
 \begin{figure}[H]
 
-{\centering \includegraphics{Q1_files/figure-latex/Figure2-4} 
+{\centering \includegraphics{Q1_files/figure-latex/Figure3-2} 
 
 }
 
-\caption{Caption Here \label{Figure2}}\label{fig:Figure2-4}
+\caption{Caption Here \label{Figure3}}\label{fig:Figure3-2}
 \end{figure}
 
-Show how quickly different regions increased their hospitalization
-facilities, and whether this led or lagged ICU admissions.
+\hypertarget{changes-in-general-and-icu-hospitalisation}{%
+\subsection{Changes in General and ICU
+Hospitalisation}\label{changes-in-general-and-icu-hospitalisation}}
 
-Hospitalisation and ICU admission are plotted.
+Hospitalisations and ICU admissions are plotted.
 
 Plotting across continent, we can see that each continent experienced
 waves of hospitalisation at different times. Europe, North America and
-Asia experienced the highest shocks in hospitalisations. Hospitalisation
-in Africa were always low.
+Asia experienced the highest shocks in hospitalisations.
+Hospitalisations in Africa were always low. This is expected given the
+cases were fewer.
+
+\begin{figure}[H]
+
+{\centering \includegraphics{Q1_files/figure-latex/Figure4-1} 
+
+}
+
+\caption{Hospital Admissions \label{Figure4}}\label{fig:Figure4}
+\end{figure}
 
 Europe and South America experienced the highest numbers of weekly ICU
 admission per million . This is interesting because South America did
 not have as sharp spikes in general hospitalisations compared to other
 continents.
 
+\begin{figure}[H]
+
+{\centering \includegraphics{Q1_files/figure-latex/Figure5-1} 
+
+}
+
+\caption{Hospital Admissions \label{Figure5}}\label{fig:Figure5}
+\end{figure}
+
 Plotting hospital patients and ICU patients, it can be seen that they
 follow the same trends and waves. ICU patient numbers always increase
-globally when global hospitalisations increase. Therefore,
-hospitalisation led ICU hospitalisation.
+globally when global hospitalisations increase. Therefore, general
+hospitalisation led ICU hospitalisations.
 
 We can also see that there is a positive correlation (0.6) between the
 numberr of hospital patients and number of tests. Therefore, the number
@@ -388,22 +396,39 @@ of tests conducted can act as a good indicator of hospitalisation.
 
 \includegraphics{Q1_files/figure-latex/unnamed-chunk-2-1.pdf}
 
-\includegraphics{Q1_files/figure-latex/unnamed-chunk-3-1.pdf}
-\includegraphics{Q1_files/figure-latex/unnamed-chunk-3-2.pdf}
-
 \begin{verbatim}
 ## [1] 0.6159445
 \end{verbatim}
 
-\includegraphics{Q1_files/figure-latex/unnamed-chunk-3-3.pdf}
+In South Africa, there are clear waves in hospitalisations. This shows
+how hospitalisations were clustered mostly likely when during times when
+the virus spread was high.
+
+\includegraphics{Q1_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 \hfill
 
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\hypertarget{discussion-and-conclusion}{%
+\section*{Discussion and Conclusion}\label{discussion-and-conclusion}}
+\addcontentsline{toc}{section}{Discussion and Conclusion}
 
 In conclusion, Covid-19 wrecked havoc throughout the world, leading to
-increase deaths and hospitalisations.
+increase deaths and hospitalisations. Africa experienced less COVID-19
+cases compared to the rest of the world and consequently, less deaths.
+This could also be due to a lack of proper recording of COVID data.
+
+By looking at countries with different life expectancies, the results
+are mixed. Total deaths were high and approximately the same in Japan
+and Nigeria, despite having very different life expectancies. Deaths
+were relatively low in the other specified areas. Total cases per
+million were typically higher in countries with high life expectancy. By
+not having substantially higher deaths in these countries, it is likely
+that citizens in high life expectancy countries had strong enough immune
+systems to cope with the virus.
+
+It is clear that COVID presented itself in waves and these waves
+impacted different continents at different times. ICU hospitalisations
+were strongly associated with Hospital admissions.
 
 \newpage
 

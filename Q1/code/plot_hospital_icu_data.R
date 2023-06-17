@@ -4,5 +4,6 @@ plot_hospital_icu_data <- function(data, y1_variable, y2_variable) {
         geom_line(aes(y = {{ y2_variable }}, color = "ICU Admissions")) +
         labs(x = "Date", y = "Count") +
         ggtitle("Hospitalizations and ICU Admissions over Time") +
-        scale_color_manual(values = c("Hospitalizations" = "blue", "ICU Admissions" = "red"))
+        scale_color_manual(values = c("Hospitalizations" = "blue", "ICU Admissions" = "red")) +
+        theme_minimal()
 }

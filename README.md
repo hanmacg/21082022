@@ -10,27 +10,22 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells 466882 25.0    1003754 53.7   660388 35.3
-    ## Vcells 865163  6.7    8388608 64.0  1769776 13.6
+    ## Ncells 466913 25.0    1003842 53.7   660388 35.3
+    ## Vcells 865630  6.7    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
 suppressMessages(list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.)))
-
-
-# Texevier::create_template(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
-#                           template_name = "Q3_formal",
-#                            build_project = T, open_project = T)
-# # 
-# # 
-# Texevier::create_template_html(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
-#                         template_name = "Q3",
-#                         build_project = T, open_project = T)
 ```
 
 # Question 1
 
-Read in data and source functions
+In Question 1, COVID-19 cases and vaccinations are plotted across
+continents to display the differences between Africa and other
+continents. Secondly, to look at specific countries, the severity of the
+virus is examined in high and low life expectancy countries. General
+Hospitalisations and ICU admissions are plotted for continents and
+globally.
 
 ``` r
 suppressMessages(owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv"))
@@ -111,7 +106,7 @@ s
 filtered_data <- combined_data %>%
   filter(continent %in% c("Africa", "North America", "South America", "Asia", "Europe"))
 source("Q1/code/plot_filtered_data.R")
-hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million)
+hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million, "Weekly Hospital Admissions Per Million", "Weekly Hospital Admissions among Continents")
 hosp
 ```
 
@@ -120,7 +115,7 @@ hosp
 ![](README_files/figure-gfm/unnamed-chunk-2-7.png)<!-- -->
 
 ``` r
-icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million)
+icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million, "Weekly ICU Admissions Per Million", "Weekly ICU Admissions among Continents")
 icu
 ```
 
@@ -130,11 +125,8 @@ icu
 
 ``` r
 source("Q1/code/plot_hospital_icu_data.R")
-
-
-source("Q1/code/plot_hospital_icu_data.R")
 globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
-globalp
+suppressWarnings(globalp)
 ```
 
     ## Warning: Removed 7332 rows containing missing values (`geom_line()`).
@@ -144,6 +136,13 @@ globalp
 ![](README_files/figure-gfm/unnamed-chunk-2-9.png)<!-- -->
 
 # Question 2
+
+In Question 2, London’s weather is first examined, looking at monthly
+precipitation, cloudiness and coldness from 2019. Descriptive tables of
+weather trends are also provided.
+
+The general UK weather is then examined, plotting average temperature
+and number of Heating Days per year since the 1880s.
 
 For London
 
@@ -460,6 +459,16 @@ heat
 
 # Question 3
 
+In Question 3, Coldplay is examined first followed by Metallica. For
+both, average danceability per album and album popularity are plotted. I
+look at the correlation between danceability and popularity, finding
+similar results for both. When looking at energy levels for live vs
+studio albums, Coldplay gives substantially less energy in their studio
+albums.
+
+I also look at the broader music scene and find the top 10 most
+danceable songs in recent history.
+
 ## Coldplay
 
 ``` r
@@ -545,7 +554,203 @@ bar_plot_met
 
 ![](README_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
 
+## Broad Music Scene
+
+``` r
+suppressMessages(Broader_Spotify_Info <- read.csv("Q3/data/Broader_Spotify_Info.csv"))
+
+top_10_dance_songs <- Broader_Spotify_Info %>%
+  top_n(10, danceability) %>%
+  select(name, artist, danceability) %>%
+  arrange(desc(danceability))
+
+# top 10 dancing songs
+table_dance <- kable(top_10_dance_songs, row.names = TRUE,
+      caption = 'Top 10 Most Danceable Songs',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table_dance
+```
+
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Top 10 Most Danceable Songs
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:left;">
+artist
+</th>
+<th style="text-align:right;">
+danceability
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+Leave Me Now
+</td>
+<td style="text-align:left;">
+Herbert
+</td>
+<td style="text-align:right;">
+0.986
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+Go Girl
+</td>
+<td style="text-align:left;">
+Pitbull
+</td>
+<td style="text-align:right;">
+0.985
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Funky Cold Medina
+</td>
+<td style="text-align:left;">
+Tone-Lōc
+</td>
+<td style="text-align:right;">
+0.984
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+State of Shock
+</td>
+<td style="text-align:left;">
+The Jacksons
+</td>
+<td style="text-align:right;">
+0.982
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+Teachers
+</td>
+<td style="text-align:left;">
+Daft Punk
+</td>
+<td style="text-align:right;">
+0.980
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+Give It To Me
+</td>
+<td style="text-align:left;">
+Timbaland
+</td>
+<td style="text-align:right;">
+0.975
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+Ice Ice Baby (Radio Edit)
+</td>
+<td style="text-align:left;">
+Vanilla Ice
+</td>
+<td style="text-align:right;">
+0.975
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+Tape Song
+</td>
+<td style="text-align:left;">
+The Kills
+</td>
+<td style="text-align:right;">
+0.974
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+Heavy Machinery
+</td>
+<td style="text-align:left;">
+Scuba
+</td>
+<td style="text-align:right;">
+0.973
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+Long Shot Kick De Bucket
+</td>
+<td style="text-align:left;">
+The Pioneers
+</td>
+<td style="text-align:right;">
+0.971
+</td>
+</tr>
+</tbody>
+</table>
+
 # Question 4
+
+Question 4 examines trends on Netflix. The top actors on Netflix
+according to their average IMDb rating are found, and their frequency
+across movies and series are tabled. This shows that more titles with
+these well-renowned actors need to shown on Netflix.
+
+The most popular genres are also plotted according to TMBd popularity.
+Sci-Fi is the most popular, therefore Netflix should increase its Sci-Fi
+titles. The average run-time for the most popular movies and shows,
+respectively, is plotted to determine the optimal length of titles to
+maintain viewer interest.
 
 ``` r
 library(knitr)
@@ -783,14 +988,14 @@ genre <- genre_plot(merged_data)
 genre
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 source("Q4/code/plot_runtime_distribution.R")
 dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 ``` r
 #dist_movie
@@ -798,13 +1003,21 @@ dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
 dist_series <- plot_runtime_distribution(merged_data, "SHOW")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
 
 ``` r
 #dist_series
 ```
 
 # Question 5
+
+To research ideas for a new app, apps are grouped by categories and
+arranged according to their average ratings. The top ten categories are
+then presented.
+
+The number of apps per category is further plotted as well as their
+number of installations, showing which categories are over-saturated and
+which receive the highest number of installations.
 
 ``` r
 suppressMessages(googleplaystore <- read_csv("Q5/data/googleplaystore.csv"))
@@ -961,4 +1174,4 @@ installp <- plot_app_installs(googleplaystore)
 installp
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />

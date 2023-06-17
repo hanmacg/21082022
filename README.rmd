@@ -15,20 +15,12 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 suppressMessages(library(tidyverse))
 suppressMessages(list.files('code/', full.names = T, recursive = T) %>% .[grepl('.R', .)] %>% as.list() %>% walk(~source(.)))
 
-
-# Texevier::create_template(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
-#                           template_name = "Q3_formal",
-#                            build_project = T, open_project = T)
-# # 
-# # 
-# Texevier::create_template_html(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
-#                         template_name = "Q3",
-#                         build_project = T, open_project = T)
 ```
 
 # Question 1
 
-Read in data and source functions
+In Question 1, COVID-19 cases and vaccinations are plotted across continents to display the differences between Africa and other continents. Secondly, to look at specific countries, the severity of the virus is examined in high and low life expectancy countries. General Hospitalisations and ICU admissions are plotted for continents and globally.
+
 ```{r}
 suppressMessages(owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv"))
 source("Q1/code/plot_covid_and_vaccination.R")
@@ -69,20 +61,22 @@ s
 filtered_data <- combined_data %>%
   filter(continent %in% c("Africa", "North America", "South America", "Asia", "Europe"))
 source("Q1/code/plot_filtered_data.R")
-hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million)
+hosp <- plot_filtered_data(filtered_data, weekly_hosp_admissions_per_million, "Weekly Hospital Admissions Per Million", "Weekly Hospital Admissions among Continents")
 hosp
-icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million)
+icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million, "Weekly ICU Admissions Per Million", "Weekly ICU Admissions among Continents")
 icu
-source("Q1/code/plot_hospital_icu_data.R")
-
 
 source("Q1/code/plot_hospital_icu_data.R")
 globalp <- plot_hospital_icu_data(combined_data, hosp_patients, icu_patients)
-globalp
+suppressWarnings(globalp)
 
 ```
 
 # Question 2
+
+In Question 2, London's weather is first examined, looking at monthly precipitation, cloudiness and coldness from 2019. Descriptive tables of weather trends are also provided.
+
+The general UK weather is then examined, plotting average temperature and number of Heating Days per year since the 1880s. 
 
 For London
 ```{r}
@@ -181,6 +175,10 @@ heat
 
 # Question 3
 
+In Question 3, Coldplay is examined first followed by Metallica. For both, average danceability per album and album popularity are plotted. I look at the correlation between danceability and popularity, finding similar results for both. When looking at energy levels for live vs studio albums, Coldplay gives substantially less energy in their studio albums.
+
+I also look at the broader music scene and find the top 10 most danceable songs in recent history.
+
 ## Coldplay
 
 ```{r}
@@ -238,7 +236,34 @@ bar_plot_met
 
 ```
 
+## Broad Music Scene
+```{r}
+suppressMessages(Broader_Spotify_Info <- read.csv("Q3/data/Broader_Spotify_Info.csv"))
+
+top_10_dance_songs <- Broader_Spotify_Info %>%
+  top_n(10, danceability) %>%
+  select(name, artist, danceability) %>%
+  arrange(desc(danceability))
+
+# top 10 dancing songs
+table_dance <- kable(top_10_dance_songs, row.names = TRUE,
+      caption = 'Top 10 Most Danceable Songs',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table_dance
+
+```
+
+
 # Question 4
+
+Question 4 examines trends on Netflix. The top actors on Netflix according to their average IMDb rating are found, and their frequency across movies and series are tabled. This shows that more titles with these well-renowned actors need to shown on Netflix.
+
+The most popular genres are also plotted according to TMBd popularity. Sci-Fi is the most popular, therefore Netflix should increase its Sci-Fi titles. The average run-time for the most popular movies and shows, respectively, is plotted to determine the optimal length of titles to maintain viewer interest. 
 
 ```{r}
 library(knitr)
@@ -275,6 +300,10 @@ dist_series <- plot_runtime_distribution(merged_data, "SHOW")
 ```
 
 # Question 5
+
+To research ideas for a new app, apps are grouped by categories and arranged according to their average ratings. The top ten categories are then presented.
+
+The number of apps per category is further plotted as well as their number of installations, showing which categories are over-saturated and which receive the highest number of installations.
 
 ```{r}
 
