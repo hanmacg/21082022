@@ -10,8 +10,8 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 ```
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells 466867 25.0    1003711 53.7   660388 35.3
-    ## Vcells 864972  6.6    8388608 64.0  1769776 13.6
+    ## Ncells 466882 25.0    1003754 53.7   660388 35.3
+    ## Vcells 865163  6.7    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
@@ -494,18 +494,56 @@ col
 
 ![](README_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
 
+``` r
+#Looking at Coldplay's energy live vs studio
+average_energy_cold <- Coldplay %>%
+  filter(album_name %in% c("Ghost Stories", "Ghost Stories Live 2014")) %>% aggregate(energy ~ album_name, ., FUN = mean)
+
+source("Q3/code/create_bar_plot.R")
+bar_plot_cold <- create_bar_plot(average_energy_cold, album_name, energy, "Album", "Average Energy", "Average Energy for Coldplay Albums")
+bar_plot_cold
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+
 ## Metallica
 
 ``` r
 suppressMessages(metallica <- read.csv("Q3/data/metallica.csv"))
 filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
+average_danceability_met <- aggregate(danceability ~ album, data = filtered_metallica, FUN = mean)
 
+dance_met <- plot_average_danceability(average_danceability_met, album)
+dance_met
+```
 
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
 met_plot <- plot_popularity_band(filtered_metallica, album, "Popularity per Metallica Album")
 met_plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+met <- create_corr(filtered_metallica, popularity, danceability, "Correlation between danceability and popularity")
+met
+```
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+![](README_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+
+``` r
+average_energy <- metallica %>%
+filter(album %in% c("Some Kind Of Monster", "Some Kind Of Monster (Live)")) %>% aggregate(energy ~ album, ., FUN = mean)
+
+bar_plot_met <- create_bar_plot(average_energy, album, energy, "Album", "Average Energy", "Average Energy for Metallica Albums")
+bar_plot_met
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
 
 # Question 4
 
@@ -513,11 +551,11 @@ met_plot
 library(knitr)
 library(kableExtra)
 
-suppressMessages(titles <- read_csv("Q4_informal/data/titles.csv"))
-suppressMessages(credits <- read_csv("Q4_informal/data/credits.csv"))
+suppressMessages(titles <- read_csv("Q4/data/titles.csv"))
+suppressMessages(credits <- read_csv("Q4/data/credits.csv"))
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
-source("Q4_informal/code/calculate_actor_frequency.R")
+source("Q4/code/calculate_actor_frequency.R")
 actor_frequency <- calculate_actor_frequency(merged_data)
 
 table <- kable(actor_frequency, row.names = TRUE,
@@ -740,7 +778,7 @@ Zach Tyler
 </table>
 
 ``` r
-source("Q4_informal/code/genre_plot.R")
+source("Q4/code/genre_plot.R")
 genre <- genre_plot(merged_data)
 genre
 ```
@@ -748,7 +786,7 @@ genre
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
-source("Q4_informal/code/plot_runtime_distribution.R")
+source("Q4/code/plot_runtime_distribution.R")
 dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
 ```
 

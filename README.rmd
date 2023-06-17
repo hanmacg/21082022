@@ -244,8 +244,8 @@ bar_plot_met
 library(knitr)
 library(kableExtra)
 
-suppressMessages(titles <- read_csv("Q4_informal/data/titles.csv"))
-suppressMessages(credits <- read_csv("Q4_informal/data/credits.csv"))
+suppressMessages(titles <- read_csv("Q4/data/titles.csv"))
+suppressMessages(credits <- read_csv("Q4/data/credits.csv"))
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
 source("Q4/code/calculate_actor_frequency.R")
