@@ -1,0 +1,122 @@
+---
+title: "Netflix Ratings"
+author: "H MacGinty"
+date: "June 2023"
+# date: "`r Sys.Date()`"
+bibliography: Tex/ref.bib       # Do not edit: Keep this naming convention and location.
+output:
+  pagedown::html_paged:
+    # template: wp_paged.html
+    # css: ['wp.css', 'wp-fonts.css', 'wp-page.css']
+    css: ["Template/default-fonts-Texevier.css", "Template/default-page-Texevier.css", "Template/default-Texevier.css"]
+    csl: Template/harvard-stellenbosch-university.csl # referencing format used.
+    template: ["Template/paged-Texevier.html"]
+
+    toc: true
+    # change to true for a self-contained document, but it'll be a litte slower for Pandoc to render
+    self_contained: TRUE
+abstract: |
+    Netflix has seen a decline in users in recent months and a sharp decline in their share price.
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
+```
+
+\newpage
+
+# Introduction {-}
+
+Netflix is concerned with their drop in users.
+
+# Netflix Statistics  {-}
+
+<!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
+
+```{r }
+
+  # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
+  # Set WD below to your project's working directory.
+
+titles <- read_csv("data/titles.csv")
+credits <- read_csv("data/credits.csv")
+merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
+
+```
+
+Netflix is known for having terrible options for viewers. It should keep the movies and show with the highest IMDB scores and drop those with the lowest. 
+
+Firstly, it is important to have well reknowned actors on Netflix in order to keep viewers interested.
+
+Actors are arranged by their average IMDb score and filtered to only include those with the top IMDb scores. From this, we can find the 17 actors with the highest IMDb scores - thus reflecting actors of the best calibre. The frequency of these top 17 actors in Netflix titles are presented in the following table.
+
+\newpage
+
+Some of the top actors, like Anna Gunn and Betsy Brandt, only appear in one Netflix title. To maintain customers, Netflix should increase the number of titles that feature these 17 actors. Customers will not give up on their Netflix accounts if they feel Netflix can maintain prestige and present the best actors and titles. 
+
+
+```{r}
+source("code/calculate_actor_frequency.R")
+actor_frequency <- calculate_actor_frequency(merged_data)
+
+table <- kable(actor_frequency, row.names = TRUE,
+      caption = 'Top Actors on Netflix by IMDB Score and their Frequency in Netflix titles',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
+```
+
+By averaging popularity (from TMDb score) by genre, it can be seen that Sci-fi is the most popular genre, followed by horror. To keep viewers interested in Netflix, it is worth increasing the number of movies and shows in these categories to ensure customers are not lost. Since documentaries and reality, on average, have low popularity, it is worth considering cutting down on these genres which are plentiful on Netflix.
+
+
+```{r}
+source("code/genre_plot.R")
+genre <- genre_plot(merged_data)
+genre
+```
+
+By filtering the data to include the most popular movies, based on the TMDb popularity score of above 100, it is shown that the most popular movies typically have a run time around 100 minutes. Nextflix should thus aim to have movie runtimes that are approximately this long. Movies shorter or substantially longer tend to be less popular. 
+
+Similarly, the most popular series have a run time around 40 minutes. None of the most popular series are longer than 70 minutes. 
+
+```{r}
+source("code/plot_runtime_distribution.R")
+dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
+#dist_movie
+
+dist_series <- plot_runtime_distribution(merged_data, "SHOW")
+#dist_series
+```
+
+
+<!-- $$ -->
+<!-- This is a commented out section in the writing part. -->
+<!-- Comments are created by highlighting text, amnd pressing CTL+C -->
+<!-- \\begin{align} -->
+<!-- \\beta = \\alpha^2 -->
+<!-- \end{align} -->
+<!-- $$ -->
+
+
+
+\newpage
+
+
+# Conclusion {-}
+
+
+Overall, there are a number of steps Netflix can take to address its decline in viewers. It should include more movies and shows with the best actors according to IMDb scores, include more sh0ws with the most popular genres, such as Sci-fi, and ensure that series and movies are the appropriate and optimal length to keep viewers interested. 
+
+
+
+
+
+
+
+

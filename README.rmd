@@ -181,4 +181,75 @@ heat
 
 # Question 3
 
+## Coldplay
+
+```{r}
+Coldplay <- read_csv("Q3/data/Coldplay.csv")
+
+filtered_coldplay <- subset(Coldplay, album_name %in% c("Parachutes", "A Rush of Blood to the Head", "X&Y", "Viva La Vida or Death and All His Friends", "Mylo Xyloto", "Ghost Stories", "A Head Full of Dreams", "Love in Tokyo", "Everyday Life", "Music Of The Spheres"))
+
+average_danceability <- aggregate(danceability ~ album_name, data = filtered_coldplay, FUN = mean)
+
+source("Q3/code/plot_average_danceability.R")
+dance_coldplay <- plot_average_danceability(average_danceability, album_name)
+dance_coldplay
+
+
+source("Q3/code/plot_popularity_band.R")
+cold_play_plot <- plot_popularity_band(filtered_coldplay, album_name, "Popularity per ColdPlay Album")
+cold_play_plot
+
+
+source("Q3/code/create_corr.R")
+col <- create_corr(filtered_coldplay, popularity, danceability, "Correlation between danceability and popularity")
+col
+
+```
+
+## Metallica
+
+```{r}
+metallica <- read.csv("Q3/data/metallica.csv")
+filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
+
+
+met_plot <- plot_popularity_band(filtered_metallica, album, "Popularity per Metallica Album")
+met_plot
+```
+
+# Question 4
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+titles <- read_csv("Q4/data/titles.csv")
+credits <- read_csv("Q4/data/credits.csv")
+merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
+
+source("Q4/code/calculate_actor_frequency.R")
+actor_frequency <- calculate_actor_frequency(merged_data)
+
+table <- kable(actor_frequency, row.names = TRUE,
+      caption = 'Top Actors on Netflix by IMDB Score and their Frequency in Netflix titles',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table
+
+source("Q4/code/genre_plot.R")
+genre <- genre_plot(merged_data)
+genre
+
+source("Q4/code/plot_runtime_distribution.R")
+dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
+dist_movie
+
+dist_series <- plot_runtime_distribution(merged_data, "SHOW")
+dist_series
+
+```
 

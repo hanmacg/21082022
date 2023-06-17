@@ -1,96 +1,36 @@
 ---
-# IMPORTANT: Change settings here, but DO NOT change the spacing.
-# Remove comments and add values where applicable.
-# The descriptions below should be self-explanatory
-
 title: "21082022 Question 4"
-#subtitle: "This will appear as Right Header"
-
-documentclass: "elsarticle"
-
-# --------- Thesis title (Optional - set to FALSE by default).
-# You can move the details below around as you please.
-Thesis_FP: FALSE
-# Entry1: "An unbelievable study with a title spanning multiple lines."
-# Entry2: "\\textbf{Some Guy}" # textbf for bold
-# Entry3: "A thesis submitted toward the degree of Doctor of Philosophy"
-# Uni_Logo: Tex/Logo.png # Place a logo in the indicated location (from your root, e.g. defaults to ~/Tex/Logo.png) and uncomment this line. Leave uncommented for no image
-# Logo_width: 0.3 # If using a logo - use this to set width (size) of image
-# Entry4: "Under the supervision of: \\vfill Prof. Joe Smith and Dr. Frank Smith"
-# Entry5: "Stellenbosch University"
-# Entry6: April 2020
-# Entry7:
-# Entry8:
-
-# --------- Front Page
-# Comment: ----- Follow this pattern for up to 5 authors
-AddTitle: TRUE # Use FALSE when submitting to peer reviewed platform. This will remove author names.
-Author1: "Hannah MacGinty"  # First Author - note the thanks message displayed as an italic footnote of first page.
-Ref1: "Stellenbosch, South Africa" # First Author's Affiliation
-Email1: "21082022\\@sun.ac.za" # First Author's Email address
-
-# Author2: "John Smith"
-# Ref2: "Some other Institution, Cape Town, South Africa"
-# Email2: "John\\@gmail.com"
-# CommonAffiliation_12: TRUE # If Author 1 and 2 have a common affiliation. Works with _13, _23, etc.
-# 
-# Author3: "John Doe"
-# Email3: "Joe\\@gmail.com"
-# 
-# CorrespAuthor_1: TRUE  # If corresponding author is author 3, e.g., use CorrespAuthor_3: TRUE
-# 
-# # Comment out below to remove both. JEL Codes only given if keywords also given.
-# keywords: "Multivariate GARCH \\sep Kalman Filter \\sep Copula" # Use \\sep to separate
-# JELCodes: "L250 \\sep L100"
-
-# ----- Manage headers and footers:
-#BottomLFooter: $Title$
-#BottomCFooter:
-#TopLHeader: \leftmark # Adds section name at topleft. Remove comment to add it.
-BottomRFooter: "\\footnotesize Page \\thepage" # Add a '#' before this line to remove footer.
-addtoprule: TRUE
-addfootrule: TRUE               # Use if footers added. Add '#' to remove line.
-
-# --------- page margins:
-margin: 2.3 # Sides
-bottom: 2 # bottom
-top: 2.5 # Top
-HardSet_layout: TRUE # Hard-set the spacing of words in your document. This will stop LaTeX squashing text to fit on pages, e.g.
-# This is done by hard-setting the spacing dimensions. Set to FALSE if you want LaTeX to optimize this for your paper.
-
-# --------- Line numbers
-linenumbers: FALSE # Used when submitting to journal
-
-# ---------- References settings:
-# You can download cls format here: https://www.zotero.org/ - simply search for your institution. You can also edit and save cls formats here: https://editor.citationstyles.org/about/
-# Hit download, store it in Tex/ folder, and change reference below - easy.
-bibliography: Tex/ref.bib       # Do not edit: Keep this naming convention and location.
-csl: Tex/harvard-stellenbosch-university.csl # referencing format used.
-# By default, the bibliography only displays the cited references. If you want to change this, you can comment out one of the following:
-#nocite: '@*' # Add all items in bibliography, whether cited or not
-# nocite: |  # add specific references that aren't cited
-#  @grinold2000
-#  @Someoneelse2010
-
-# ---------- General:
-RemovePreprintSubmittedTo: TRUE  # Removes the 'preprint submitted to...' at bottom of titlepage
-Journal: "Journal of Economics"   # Journal that the paper will be submitting to, if RemovePreprintSubmittedTo is set to TRUE.
-toc: FALSE                       # Add a table of contents
-numbersections: TRUE             # Should sections (and thus figures and tables) be numbered?
-fontsize: 11pt                  # Set fontsize
-linestretch: 1.2                # Set distance between lines.
-link-citations: TRUE            # This creates dynamic links to the papers in reference list.
-
-### Adding additional latex packages:
-# header-includes:
-#    - \usepackage{colortbl} # Add additional packages here.
-
+documentclass: elsarticle
+Thesis_FP: no
 output:
+  html_document:
+    df_print: paged
   pdf_document:
-    keep_tex: TRUE
+    keep_tex: yes
     template: Tex/TexDefault.txt
-    fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
+    fig_width: 3.5
     fig_height: 3.5
+Author1: Hannah MacGinty
+Ref1: Stellenbosch, South Africa
+Email1: 21082022\@sun.ac.za
+BottomRFooter: \footnotesize Page \thepage
+addtoprule: yes
+addfootrule: yes
+margin: 2.3
+bottom: 2
+top: 2.5
+HardSet_layout: yes
+linenumbers: no
+bibliography: Tex/ref.bib
+csl: "Tex/harvard-stellenbosch-university.csl"
+RemovePreprintSubmittedTo: yes
+Journal: Journal of Economics
+toc: no
+numbersections: yes
+fontsize: 11pt
+linestretch: 1.2
+link-citations: yes
+AddTitle: yes
 abstract: |
   Netflix has seen a decline in users in recent months and a sharp decline in their share price.
 ---
@@ -108,11 +48,12 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 # Lets load in example data, and see how this can be stored and later called from your 'data' folder.
 if(!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
-Example_data <- Texevier::Ex_Dat
+library(knitr)
+library(kableExtra)
 
 # Notice that as you are working in a .Rproj file (I am assuming you are) - the relative paths of your directories start at your specified root.
 # This means that when working in a .Rproj file, you never need to use getwd() - it is assumed as your base root automatically.
-write_rds(Example_data, path = "data/Example_data.rds")
+
 
 ```
 
@@ -127,28 +68,49 @@ Netflix is concerned with their drop in users.
 
 # Data  {-}
 
-Discussion of data should be thorough with a table of statistics and ideally a figure.
+Netflix is known for having terrible options for viewers. It should keep the movies and show with the highest IMDB scores and drop those with the lowest. 
 
+Firstly, it is important to have well reknowned actors on Netflix in order to keep viewers interested.
+
+Actors are arranged by their average IMDb score and filtered to only include those with the top IMDb scores. From this, we can find the 17 actors with the highest IMDb scores - thus reflecting actors of the best calibre. The frequency of these top 17 actors in Netflix titles are presented in the following table.
+
+Some of the top actors, like Anna Gunn and Betsy Brandt, only appear in one Netflix title. To maintain customers, Netflix should increase the number of titles that feature these 17 actors. Customers will not give up on their Netflix accounts if they feel Netflix can maintain prestige and present the best actors and titles. 
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
-```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
-
+```{r table-1, echo=TRUE, message=FALSE, warning=FALSE, results="asis"}
 titles <- read_csv("data/titles.csv")
 credits <- read_csv("data/credits.csv")
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
-top_10_popular <- merged_data %>%
-    filter(type == "MOVIE") %>% 
-  group_by(title) %>%
-  summarise(max_imdb_score = max(imdb_score)) %>%
-  arrange(desc(max_imdb_score)) %>%
-  top_n(10, max_imdb_score)
+# top_10_popular <- merged_data %>%
+#     filter(type == "MOVIE") %>% 
+#   group_by(title) %>%
+#   summarise(max_imdb_score = max(imdb_score)) %>%
+#   arrange(desc(max_imdb_score)) %>%
+#   top_n(10, max_imdb_score)
 
-library(knitr)
-library(kableExtra)
-table <- kable(top_10_popular, row.names = TRUE,
-      caption = 'Top 10 titles on Netflix by IMDB Score',
+
+
+# top_10_popular_actor <- merged_data %>%
+#   filter(role == "ACTOR") %>% 
+#   group_by(name) %>%
+#   summarise(max_imdb_score = max(imdb_score)) %>%
+#   arrange(desc(max_imdb_score)) %>%
+#   top_n(10, max_imdb_score)
+# 
+# 
+# actor_frequency <- merged_data %>%
+#   filter(role == "ACTOR") %>%
+#   filter(name %in% top_10_popular_actor$name) %>%
+#   count(name) %>% 
+#   rename (Actor = name, Frequency = n)
+
+source("code/calculate_actor_frequency.R")
+actor_frequency <- calculate_actor_frequency(merged_data)
+
+table <- kable(actor_frequency, row.names = TRUE,
+      caption = 'Top Actors on Netflix by IMDB Score and their Frequency in Netflix titles',
       format = "html", booktabs = T) %>%
         kable_styling(full_width = T,
                       latex_options = c("striped",
@@ -158,55 +120,206 @@ table <- kable(top_10_popular, row.names = TRUE,
 table
 
 
-top_10_popular_actor <- merged_data %>%
-  filter(role == "ACTOR") %>% 
-  group_by(name) %>%
-  summarise(max_imdb_score = max(imdb_score)) %>%
-  arrange(desc(max_imdb_score)) %>%
-  top_n(10, max_imdb_score)
-
 #plot average IMDB scores for movies with certain actors over time
 
-categories <- unique(merged_data$type)
+# categories <- unique(merged_data$type)
+# 
+# ggplot(merged_data, aes(x = type)) +
+#   geom_bar() +
+#   xlab("Type") +
+#   ylab("Count") +
+#   ggtitle("Count of Movies versus Series")
 
-ggplot(merged_data, aes(x = type)) +
-  geom_bar() +
-  xlab("Type") +
-  ylab("Count") +
-  ggtitle("Count of Movies versus Series")
 
+# selected_movies <- c("C/o Kancharapalem", "Chhota Bheem & Krishna in Mayanagari", "David Attenborough: A Life on Our Planet",
+#                      "No Longer Kids", "Forrest Gump", "Inception", "Sky Tour: The Movie", "A Lion in the House",
+#                      "Anbe Sivam", "Bo Burnham: Inside", "Bye Bye London", "Rubaru Roshni")
+# 
+# filtered_data <- merged_data[merged_data$title %in% selected_movies, ]
 
-selected_movies <- c("C/o Kancharapalem", "Chhota Bheem & Krishna in Mayanagari", "David Attenborough: A Life on Our Planet",
-                     "No Longer Kids", "Forrest Gump", "Inception", "Sky Tour: The Movie", "A Lion in the House",
-                     "Anbe Sivam", "Bo Burnham: Inside", "Bye Bye London", "Rubaru Roshni")
-
-filtered_data <- merged_data[merged_data$title %in% selected_movies, ]
-
-ggplot(filtered_data, aes(x = runtime)) +
-  geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
-  xlab("Runtime") +
-  ylab("Count") +
-  ggtitle("Distribution of Movie Runtimes for Selected Movies")
+# ggplot(filtered_data, aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Movie Runtimes for Selected Movies")
 
 
 #run time for movies
-ggplot(merged_data, aes(x = runtime)) +
-  geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
-  xlab("Runtime") +
-  ylab("Count") +
-  ggtitle("Distribution of Movie Runtimes")
+# movie <- merged_data %>% filter(type == "MOVIE") %>%
+# ggplot(aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Movie Runtimes") + theme_light()
+# 
+# 
+# movie
+
+
+#run time for series
+
+# series <- merged_data %>% filter(type == "SHOW") %>%
+# ggplot(aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "steelblue", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Series Runtimes") + theme_light()
+# 
+# series
+
+
+
+# correlation <- merged_data %>% filter(type =="MOVIE") %>% 
+#   select(imdb_score, runtime) %>% 
+#   drop_na() %>% 
+#   cor()
+# 
+# cor_df <- as.data.frame(correlation)
+# 
+# cor_df <- cor_df %>% 
+#   rownames_to_column("IMDb_Score") %>% 
+#   melt(id.vars = "IMDb_Score", variable.name = "Runtime", value.name = "Correlation")
+# 
+# ggplot(cor_df, aes(x = Runtime, y = IMDb_Score, fill = Correlation)) +
+#   geom_tile(color = "white") +
+#   scale_fill_gradient(low = "white", high = "steelblue") +
+#   xlab("Runtime") +
+#   ylab("IMDb Score") +
+#   ggtitle("Correlation Heatmap: IMDb Score vs. Runtime of Movies")
+
+
+# average_imdb <- genres %>%
+#     filter(genres != "") %>%
+#   group_by(genres) %>%
+#   summarize(average_imdb_score = mean(imdb_score, na.rm = TRUE))
+# 
+# 
+# ggplot(average_imdb, aes(x = genres, y = average_imdb_score)) +
+#   geom_bar(stat = "identity", fill = "red") +
+#   xlab("Genres") +
+#   ylab("Average IMDb Score") +
+#   ggtitle("Average IMDb Score by Genres") + theme_light() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+By averaging popularity (from TMDb score) by genre, it can be seen that Sci-fi is the most popular genre, followed by horror. To keep viewers interested in Netflix, it is worth increasing the number of movies and shows in these categories to ensure customers are not lost. Since documentaries and reality, on average, have low popularity, it is worth considering cutting down on these genres which are plentiful on Netflix. 
+
+```{r}
+
+# genres <- merged_data %>%
+#   separate_rows(genres, sep = ", ") %>%
+#   mutate(genres = str_remove_all(genres, "\\[|\\]"),  
+#          genres = str_trim(genres))  
+# 
+# average_tmdb <- genres %>%
+#     filter(genres != "") %>%
+#   group_by(genres) %>%
+#   summarize(average_popularity = mean(tmdb_popularity, na.rm = TRUE))
+
+source("code/genre_plot.R")
+genre <- genre_plot(merged_data)
+
+# genre_plot <- merged_data %>% separate_rows(genres, sep = ", ") %>%
+#   mutate(genres = str_remove_all(genres, "\\[|\\]"),  
+#          genres = str_trim(genres)) %>% filter(genres != "") %>%
+#   group_by(genres) %>%
+#   summarize(average_popularity = mean(tmdb_popularity, na.rm = TRUE)) %>%   ggplot(aes(x = genres, y = average_popularity)) +
+#   geom_bar(stat = "identity", fill = "red") +
+#   xlab("Genres") +
+#   ylab("Average TMDb Poopularity") +
+#   ggtitle("Average TMDb Popularity by Genres") + theme_light() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# ggplot(average_tmdb, aes(x = genres, y = average_popularity)) +
+#   geom_bar(stat = "identity", fill = "red") +
+#   xlab("Genres") +
+#   ylab("Average TMDb Poopularity") +
+#   ggtitle("Average TMDb Popularity by Genres") + theme_light() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
 
 ```
 
+By filtering the data to include the most popular movies, based on the TMDb popularity score of above 100, it is shown that the most popular movies typically have a run time around 100 minutes. Nextflix should thus aim to have movie runtimes that are approximately this long. Movies shorter or substantially longer tend to be less popular. 
+
+Similarly, the most popular series have a run time around 40 minutes. None of the most popular series are longer than 70 minutes. 
 
 
 ```{r Figure2, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
 
 
+# dist <- merged_data %>%  filter(tmdb_popularity >= 100) %>% filter(type == "MOVIE") %>%
+# ggplot(aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "red", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Most Popular Movie's Runtimes") + theme_light()
+
+
+# 
+# filtered_data <- merged_data %>%
+#   filter(type == "MOVIE") %>%
+#   filter(tmdb_popularity >= 100)
+# 
+# averaged_popularity <- filtered_data %>%
+#   group_by(title) %>%
+#   summarize(average_popularity = mean(tmdb_popularity, na.rm = TRUE))
+# 
+# dist <- filtered_data %>% group_by(title) %>% 
+#   ggplot(aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "red", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Most Popular Movie's Runtimes") +
+#   theme_light()
+
+
+
+source("code/plot_runtime_distribution.R")
+dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
+dist_movie
+
+# filtered_data <- merged_data %>%
+#   filter(type == "MOVIE") %>%
+#   filter(tmdb_popularity >= 100) %>%
+#   distinct(title, .keep_all = TRUE)
+# 
+# dist <- filtered_data %>%
+#   ggplot(aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "red", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Most Popular Movie's Runtimes") +
+#   theme_light()
+# 
+# print(dist)
+
+
+#For series
+# filtered_data_show <- merged_data %>%
+#   filter(type == "SHOW") %>%
+#   filter(tmdb_popularity >= 100) %>%
+#   distinct(title, .keep_all = TRUE)
+# 
+# dist_show <- filtered_data_show %>%
+#   ggplot(aes(x = runtime)) +
+#   geom_histogram(binwidth = 10, fill = "red", color = "white") +
+#   xlab("Runtime") +
+#   ylab("Count") +
+#   ggtitle("Distribution of Most Popular Series' Runtimes") +
+#   theme_light()
+# 
+# print(dist_show)
+
+dist_series <- plot_runtime_distribution(merged_data, "SHOW")
+
+
+
 ```
 
-To reference the plot above, add a ``\\label'' after the caption in the chunk heading, as done above. Then reference the plot as such: As can be seen, Figures \ref{Figure1}  and \ref{Figure2} are excellent, with Figure \ref{Figure2} being particularly aesthetically pleasing due to its device setting of Tikz. 
-
+ 
 
 <!-- :::::: {.columns data-latex="[T]"} -->
 <!-- ::: {.column data-latex="{0.7\textwidth}"} -->
@@ -233,11 +346,6 @@ To reference the plot above, add a ``\\label'' after the caption in the chunk he
 
 
 
-#  Methodology \label{Meth}
-
-
-
-
 
 
 <!-- $$ -->
@@ -248,62 +356,15 @@ To reference the plot above, add a ``\\label'' after the caption in the chunk he
 <!-- \end{align} -->
 <!-- $$ -->
 
-# Results
-
-Tables can be included as follows. Use the _xtable_ (or kable) package for tables. Table placement = H implies Latex tries to place the table Here, and not on a new page (there are, however, very many ways to skin this cat. Luckily there are many forums online!).
-
-
-```{r ShortTable, results = 'asis'}
-
-
-
-```
-
-
-
-```{r LongTable, results = 'asis'}
-
-
-```
 
 \hfill
 
 <!-- hfill can be used to create a space, like here between text and table. -->
 
 
-
-```{r, results = 'asis'}
-
-if(!require(huxtable)) install.packages(huxtable)
-library(huxtable)
-data(diamonds, package = 'ggplot2')
-Title <- "Regression Output"
-Label <- "Reg01"
-lm1 <- lm(price ~ carat, diamonds)
-lm2 <- lm(price ~ depth, diamonds)
-lm3 <- lm(price ~ carat + depth, diamonds)
-htab <-
-huxreg(lm1, lm2, lm3,
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-# More settings:
-font_size(htab) <- 12
-# Let's change regression names: this is slightly hacky, but works. Comment out this section to see what the default looks like:
-  Names <- c( "Reg1", "Reg2", "Reg3")
-  for(i in 1:length(Names)) {
-    htab[1,][[1+i]] <- Names[i]
-  }
-# Now simply call the table:
-htab
-
-```
-
-
 # Conclusion
 
-This is my conclusion...
+Overall, there are a number of steps Netflix can take to address its decline in viewers. It should include more movies and shows with the best actors according to IMDb scores, include more sh0ws with the most popular genres, such as Sci-fi, and ensure that series and movies are the appropriate and optimal length to keep viwers interested. 
 
 <!-- Make title of bibliography here: -->
 <!-- \newpage -->
