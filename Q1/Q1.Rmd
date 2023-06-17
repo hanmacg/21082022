@@ -217,7 +217,7 @@ highest_life_expectancy_regions <- average_life_expectancy %>%
   top_n(5, wt = average_life_expectancy)
 
 # Print the regions with the highest life expectancy
-print(highest_life_expectancy_regions)
+# print(highest_life_expectancy_regions)
 
 #countries with lowest LE
 lowest_life_expectancy_regions <- average_life_expectancy %>%
@@ -265,10 +265,6 @@ r
 
 #Cases with highest LE
 
-# ggplot(highest_le, aes(x = date, y = total_cases_per_million, color = location)) +
-#   geom_line() +
-#   labs(x = "Date", y = "Total Deaths") +
-#   ggtitle("Total Cases per Million over Time in Regions with Highest LE") + theme_minimal()
 
 Total_cases_per_Million <- highest_le$total_cases_per_million
 
@@ -311,12 +307,7 @@ icu <- plot_filtered_data(filtered_data, weekly_icu_admissions_per_million, "Wee
 icu
 
 #Worldwide, we see that hospitalisations and ICU admissions followed similar waves. 
-# ggplot(combined_data, aes(x = date)) +
-#   geom_line(aes(y = hosp_patients, color = "Hospitalizations")) +
-#   geom_line(aes(y = icu_patients, color = "ICU Admissions")) +
-#   labs(x = "Date", y = "Count") +
-#   ggtitle("Hospitalizations and ICU Admissions over Time") +
-#   scale_color_manual(values = c("Hospitalizations" = "blue", "ICU Admissions" = "red"))
+
 ```
 
 
