@@ -37,9 +37,8 @@ The report gives insights into App designs for the development of a great new ap
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
-```{r Figure1, warning = FALSE, fig.align = 'center', fig.cap =  "Number of Apps per category and number of installs \\label{Figure1}", fig.ext = "png", fig.height = 8, fig.width = 7}
-
-  # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
+```{r}
+# This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
   # Set WD below to your project's working directory.
 google_reviews <- read_csv("data/googleplaystore_user_reviews.csv")
 googleplaystore <- read_csv("data/googleplaystore.csv")
@@ -48,8 +47,10 @@ categories <- unique(googleplaystore$Installs)
 categories <- unique(googleplaystore$Category)
 
 googleplaystore$Installs <- factor(googleplaystore$Installs, levels = c("1,000,000,000+", "500,000,000+", "100,000,000+", "50,000,000+", "10,000,000+", "5,000,000+", "1,000,000+", "500,000+", "100,000+", "50,000+", "10,000+", "5,000+", "1,000+", "500+", "100+", "50+", "10+", "5+", "1+", "0+", "0"), ordered = TRUE)
+```
 
-
+Table 
+```{r}
 ##
 category_avg_ratings <- googleplaystore %>%
   group_by(Category) %>%
@@ -69,7 +70,10 @@ table_app <- kable(top_10_categories, row.names = TRUE,
                                         "HOLD_position"),
                       font_size = 13)
 table_app
+```
 
+
+```{r Figure1, warning = FALSE, fig.align = 'center', fig.cap =  "Number of Apps per category and number of installs \\label{Figure1}", fig.ext = "png", fig.height = 8, fig.width = 7}
 # Next we filter data to only include those categories
 
 filtered_data <- googleplaystore %>%
@@ -90,6 +94,11 @@ ggplot(filtered_data, aes(x = Category, fill = Installs)) +
     legend.margin = margin(0, 0, 0, 0)  # Adjust the margin around the legend
   ) 
 
+
+googleplaystore$`Last Updated` <- as.Date(googleplaystore$`Last Updated`, format = "%B %d, %Y")
+
+# Convert the dates to the desired format (YYYY-MM-DD)
+googleplaystore$`Last Updated` <- format(googleplaystore$`Last Updated`, "%Y-%m-%d")
 
 
 ```

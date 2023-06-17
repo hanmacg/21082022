@@ -316,7 +316,9 @@ dist_movie
 dist_series <- plot_runtime_distribution(merged_data, "SHOW")
 
 
-
+# Texevier::create_template_html(directory = "C:/Users/hanna/OneDrive/Documents/Data Science/21082022/",
+#                           template_name = "Q4_informal",
+#                           build_project = T, open_project = T)
 ```
 
  

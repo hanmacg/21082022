@@ -11,7 +11,7 @@ gc() # garbage collection - It can be useful to call gc after a large object has
 
     ##          used (Mb) gc trigger (Mb) max used (Mb)
     ## Ncells 466672 25.0    1003154 53.6   660388 35.3
-    ## Vcells 864281  6.6    8388608 64.0  1769776 13.6
+    ## Vcells 864337  6.6    8388608 64.0  1769776 13.6
 
 ``` r
 suppressMessages(library(tidyverse))
@@ -33,20 +33,7 @@ suppressMessages(list.files('code/', full.names = T, recursive = T) %>% .[grepl(
 Read in data and source functions
 
 ``` r
-owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv")
-```
-
-    ## Rows: 194260 Columns: 67
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr   (4): iso_code, continent, location, tests_units
-    ## dbl  (62): total_cases, new_cases, new_cases_smoothed, total_deaths, new_dea...
-    ## date  (1): date
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
+suppressMessages(owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv"))
 source("Q1/code/plot_covid_and_vaccination.R")
 plots <- plot_covid_and_vaccination(owid_covid_data)
 ```
@@ -73,19 +60,7 @@ plots$plot_vaccinations  # Figure 2: Average Fully Vaccinated per Hundred
 ![](README_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
 
 ``` r
-Deaths_by_cause <- read_csv("Q1/data/Deaths_by_cause.csv")
-```
-
-    ## Rows: 7273 Columns: 36
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr  (3): Entity, Code, Number of executions (Amnesty International)
-    ## dbl (33): Year, Deaths - Meningitis - Sex: Both - Age: All Ages (Number), De...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
+suppressMessages(Deaths_by_cause <- read_csv("Q1/data/Deaths_by_cause.csv"))
 combined_data <- bind_rows(owid_covid_data, Deaths_by_cause)
 
 lowest_le <- combined_data %>%
@@ -173,18 +148,7 @@ globalp
 For London
 
 ``` r
-london_weather <- read_csv("Q2/data/london_weather.csv")
-```
-
-    ## Rows: 15341 Columns: 10
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## dbl (10): date, cloud_cover, sunshine, global_radiation, max_temp, mean_temp...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
+suppressMessages(london_weather <- read_csv("Q2/data/london_weather.csv"))
 london_weather$date <- as.character(london_weather$date)
 london_weather$date <- as.Date(london_weather$date, format = "%Y%m%d")
 london <- na.omit(london_weather)
@@ -461,19 +425,7 @@ precipitation_mean
 For the UK in general
 
 ``` r
-UK <- read_csv("Q2/data/UKMonthly_Detailed.csv")
-```
-
-    ## Rows: 1707 Columns: 34
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (17): STATION, DATE, NAME, CDSD_ATTRIBUTES, CLDD_ATTRIBUTES, DT00_ATTRIB...
-    ## dbl (17): LATITUDE, LONGITUDE, ELEVATION, CDSD, CLDD, DT00, DT32, DX32, DX70...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
+suppressMessages(UK <- read_csv("Q2/data/UKMonthly_Detailed.csv"))
 UK$DATE <- as.Date(paste0(UK$DATE, "-01"), format = "%Y-%m-%d")
 
 UK_yearly_temp <- UK %>%
@@ -511,21 +463,8 @@ heat
 ## Coldplay
 
 ``` r
-Coldplay <- read_csv("Q3/data/Coldplay.csv")
-```
+suppressMessages(Coldplay <- read_csv("Q3/data/Coldplay.csv"))
 
-    ## Rows: 232 Columns: 15
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr   (2): name, album_name
-    ## dbl  (11): duration, popularity, acousticness, danceability, energy, instrum...
-    ## lgl   (1): explicit
-    ## date  (1): release_date
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 filtered_coldplay <- subset(Coldplay, album_name %in% c("Parachutes", "A Rush of Blood to the Head", "X&Y", "Viva La Vida or Death and All His Friends", "Mylo Xyloto", "Ghost Stories", "A Head Full of Dreams", "Love in Tokyo", "Everyday Life", "Music Of The Spheres"))
 
 average_danceability <- aggregate(danceability ~ album_name, data = filtered_coldplay, FUN = mean)
@@ -567,7 +506,7 @@ col
 ## Metallica
 
 ``` r
-metallica <- read.csv("Q3/data/metallica.csv")
+suppressMessages(metallica <- read.csv("Q3/data/metallica.csv"))
 filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
 
 
@@ -583,32 +522,8 @@ met_plot
 library(knitr)
 library(kableExtra)
 
-titles <- read_csv("Q4_informal/data/titles.csv")
-```
-
-    ## Rows: 5806 Columns: 15
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (8): id, title, type, description, age_certification, genres, production...
-    ## dbl (7): release_year, runtime, seasons, imdb_score, imdb_votes, tmdb_popula...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
-credits <- read_csv("Q4_informal/data/credits.csv")
-```
-
-    ## Rows: 77213 Columns: 5
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (4): id, name, character, role
-    ## dbl (1): person_id
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
+suppressMessages(titles <- read_csv("Q4_informal/data/titles.csv"))
+suppressMessages(credits <- read_csv("Q4_informal/data/credits.csv"))
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
 source("Q4_informal/code/calculate_actor_frequency.R")
@@ -849,19 +764,13 @@ dist_movie <- plot_runtime_distribution(merged_data, "MOVIE")
 ![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
-dist_movie
+#dist_movie
+
+dist_series <- plot_runtime_distribution(merged_data, "SHOW")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ``` r
-dist_series <- plot_runtime_distribution(merged_data, "SHOW")
+#dist_series
 ```
-
-![](README_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
-
-``` r
-dist_series
-```
-
-![](README_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->

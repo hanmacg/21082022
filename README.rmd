@@ -30,14 +30,14 @@ suppressMessages(list.files('code/', full.names = T, recursive = T) %>% .[grepl(
 
 Read in data and source functions
 ```{r}
-owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv")
+suppressMessages(owid_covid_data <- read_csv("Q1/data/owid-covid-data.csv"))
 source("Q1/code/plot_covid_and_vaccination.R")
 plots <- plot_covid_and_vaccination(owid_covid_data)
 plots$plot_cases  # Figure 1: Average COVID-19 Cases per Million by Continent over Time
 plots$plot_vaccinations  # Figure 2: Average Fully Vaccinated per Hundred
 
 
-Deaths_by_cause <- read_csv("Q1/data/Deaths_by_cause.csv")
+suppressMessages(Deaths_by_cause <- read_csv("Q1/data/Deaths_by_cause.csv"))
 combined_data <- bind_rows(owid_covid_data, Deaths_by_cause)
 
 lowest_le <- combined_data %>%
@@ -87,7 +87,7 @@ globalp
 For London
 ```{r}
 
-london_weather <- read_csv("Q2/data/london_weather.csv")
+suppressMessages(london_weather <- read_csv("Q2/data/london_weather.csv"))
 london_weather$date <- as.character(london_weather$date)
 london_weather$date <- as.Date(london_weather$date, format = "%Y%m%d")
 london <- na.omit(london_weather)
@@ -159,7 +159,7 @@ kable(summary_stats_sun, caption = "Stats Table", align = "c") %>%
 For the UK in general
 ```{r}
 
-UK <- read_csv("Q2/data/UKMonthly_Detailed.csv")
+suppressMessages(UK <- read_csv("Q2/data/UKMonthly_Detailed.csv"))
 UK$DATE <- as.Date(paste0(UK$DATE, "-01"), format = "%Y-%m-%d")
 
 UK_yearly_temp <- UK %>%
@@ -184,7 +184,7 @@ heat
 ## Coldplay
 
 ```{r}
-Coldplay <- read_csv("Q3/data/Coldplay.csv")
+suppressMessages(Coldplay <- read_csv("Q3/data/Coldplay.csv"))
 
 filtered_coldplay <- subset(Coldplay, album_name %in% c("Parachutes", "A Rush of Blood to the Head", "X&Y", "Viva La Vida or Death and All His Friends", "Mylo Xyloto", "Ghost Stories", "A Head Full of Dreams", "Love in Tokyo", "Everyday Life", "Music Of The Spheres"))
 
@@ -209,7 +209,7 @@ col
 ## Metallica
 
 ```{r}
-metallica <- read.csv("Q3/data/metallica.csv")
+suppressMessages(metallica <- read.csv("Q3/data/metallica.csv"))
 filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
 
 
@@ -223,8 +223,8 @@ met_plot
 library(knitr)
 library(kableExtra)
 
-titles <- read_csv("Q4_informal/data/titles.csv")
-credits <- read_csv("Q4_informal/data/credits.csv")
+suppressMessages(titles <- read_csv("Q4_informal/data/titles.csv"))
+suppressMessages(credits <- read_csv("Q4_informal/data/credits.csv"))
 merged_data <- merge(titles, credits, by = "id", all.x = TRUE)
 
 source("Q4_informal/code/calculate_actor_frequency.R")
