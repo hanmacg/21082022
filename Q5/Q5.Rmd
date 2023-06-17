@@ -41,7 +41,48 @@ The report gives insights into App designs for the development of a great new ap
 
   # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
   # Set WD below to your project's working directory.
+google_reviews <- read_csv("data/googleplaystore_user_reviews.csv")
+googleplaystore <- read_csv("data/googleplaystore.csv")
 
+categories <- unique(googleplaystore$Installs)
+categories <- unique(googleplaystore$Category)
+
+googleplaystore$Installs <- factor(googleplaystore$Installs, levels = c("1,000,000,000+", "500,000,000+", "100,000,000+", "50,000,000+", "10,000,000+", "5,000,000+", "1,000,000+", "500,000+", "100,000+", "50,000+", "10,000+", "5,000+", "1,000+", "500+", "100+", "50+", "10+", "5+", "1+", "0+", "0"), ordered = TRUE)
+
+
+##
+category_avg_ratings <- googleplaystore %>%
+  group_by(Category) %>%
+  summarize(Average_Rating = mean(Rating, na.rm = TRUE))
+
+# Find top 10 categories based on rating
+top_10_categories <- category_avg_ratings %>%
+  top_n(10, Average_Rating) %>%
+  arrange(desc(Average_Rating))
+
+table_app <- kable(top_10_categories, row.names = TRUE,
+      caption = 'Top 10 App Categories by Average Rating',
+      format = "html", booktabs = T) %>%
+        kable_styling(full_width = T,
+                      latex_options = c("striped",
+                                        "scale_down",
+                                        "HOLD_position"),
+                      font_size = 13)
+table_app
+
+# Next we filter data to only include those categories
+
+filtered_data <- googleplaystore %>%
+  filter(Category %in% c("EVENTS", "EDUCATION", "ART_AND_DESIGN", "BOOKS_AND_REFERENCE", "PERSONALIZATION", "PARENTING", "BEAUTY", "HEALTH_AND_FITNESS", "GAME", "SOCIAL"))
+
+
+ggplot(filtered_data, aes(x = Category, fill = Installs)) +
+  geom_bar() +
+  labs(x = "", y = "Count", fill = "Installs") +
+  ggtitle("Google Play App Installs by Category") + theme_minimal() +theme(axis.text.x = element_text(size = 8 , angle = 45, hjust = 1)) + theme(legend.key.size = unit(0.5, "cm"),
+        legend.text = element_text(size = 6),
+        legend.title = element_text(size = 6),
+        plot.title = element_text(size = 10, margin = margin(b = 20)))
 
 
 ```
