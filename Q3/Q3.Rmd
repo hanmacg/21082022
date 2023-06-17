@@ -37,15 +37,10 @@ This report examines major trends in popularity, danceability and energy in thei
 # Coldplay {-}
 
 
-Coldplay is examined first. Albums are filtered to exlude any live or tour versions.
+Coldplay is examined first. Albums are filtered to exclude any live or tour versions.
 
 By looking at danceability, it can be seen that "Ghost Stories" has the highest danceability. People find it difficult to dance to "Love in Tokyo".  
 
-When looking at popularity per album, it is a close call between Parachutes, A Rush of Blood to the Head, and A Head Full of Dreams. Love in Tokyo is the least popular album. 
-
-Comparing the studio version and live version of "Ghost Stories", the energy level in the live version is much higher. This implies that Coldplay is much better live. 
-
-The correlation between popularity and danceability for these Coldplay albums is plotted too. On average, the correlation is positive at 0.3. THe correlation per album is also broken down in the table below, where a Head Full of Dreams has the highest and strongest positive correlation between danceability and popularity. 
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
@@ -77,12 +72,19 @@ dance_coldplay
 # filtered_coldplay %>% mutate(album = factor(album_name), ) %>% 
 # 
 # ggplot() + geom_boxplot(aes(x = album_name, y = popularity, fill = album_name), alpha = 0.4) + geom_jitter(aes(x = album_name, y= popularity, fill = album_name), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per ColdPlay Album") +  theme(axis.text.x = element_blank())
+```
 
+When looking at popularity per album, it is a close call between Parachutes, A Rush of Blood to the Head, and A Head Full of Dreams. Love in Tokyo is the least popular album. 
 
+```{r }
 source("code/plot_popularity_band.R")
 cold_play_plot <- plot_popularity_band(filtered_coldplay, album_name, "Popularity per ColdPlay Album")
 cold_play_plot
+```
 
+The correlation between popularity and danceability for these Coldplay albums is plotted too. On average, the correlation is positive at 0.3. THe correlation per album is also broken down in the table below, where a Head Full of Dreams has the highest and strongest positive correlation between danceability and popularity. 
+
+```{r }
 #correlation
 
 Corr_overall_cold <- 
@@ -113,21 +115,26 @@ table <- kable(Correlation, row.names = TRUE,
                                         "HOLD_position"),
                       font_size = 13)
 table
+```
+
+Comparing the studio version and live version of "Ghost Stories", the energy level in the live version is much higher. This implies that Coldplay is much better live.
+
+```{r }
+average_energy_cold <- Coldplay %>%
+  filter(album_name %in% c("Ghost Stories", "Ghost Stories Live 2014")) %>% aggregate(energy ~ album_name, ., FUN = mean)
 
 
-subset_data_cold <- Coldplay %>%
-  filter(album_name %in% c("Ghost Stories", "Ghost Stories Live 2014"))
+source("code/create_bar_plot.R")
+bar_plot_cold <- create_bar_plot(average_energy_cold, album_name, energy, "Album", "Average Energy", "Average Energy for Coldplay Albums")
+bar_plot_cold
 
-average_energy <- aggregate(energy ~ album_name, data = subset_data_cold, FUN = mean)
-
-
-bar_plot <- ggplot(average_energy, aes(x = album_name, y = energy)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  xlab("Album") +
-  ylab("Average Energy") +
-  ggtitle("Average Energy for Coldplay Albums") + theme_minimal()
-
-bar_plot
+# bar_plot <- ggplot(average_energy, aes(x = album_name, y = energy)) +
+#   geom_bar(stat = "identity", fill = "steelblue") +
+#   xlab("Album") +
+#   ylab("Average Energy") +
+#   ggtitle("Average Energy for Coldplay Albums") + theme_minimal()
+# 
+# bar_plot
 
 
 ```
@@ -136,34 +143,15 @@ bar_plot
 
 Averaging danceability per album for Metallica, we can see that their classic "Metallica" album score the highest danceability.
 
-Interestingly, the most popular album on average is 72 Seasons. It is followed by Metallica, which has the widest ranging popularity among listeners. 
-
-Similar to that of coldplay, Metallica has a positive correlation between danceability and popularity. The breakdown among albums is also tabled below. 
-
-When comparing the studio and live version for Some Kind of Monster, the average energy is the same. This show Metallica puts in just as much effort at the shows as in the studio albums. Legends!
-
 ```{r}
-
 metallica <- read.csv("data/metallica.csv")
 categories <- unique(metallica$album)
-
-#print(categories)
-
 average_popularity <- aggregate(popularity ~ album, data = metallica, FUN = mean) %>%  arrange(desc(popularity))
 
 #average_popularity
 
 filtered_metallica <- subset(metallica, album %in% c("72 Seasons", "Metallica", "Master Of Puppets (Remastered)", "...And Justice For All", "Kill Em All (Remastered)", "Ride The Lightning (Remastered)", "Death Magnetic", "Garage Inc.", "HardwiredTo Self-Destruct", "Load"))
 
-
-# filtered_metallica %>% mutate(album = factor(album), ) %>% 
-# 
-# ggplot() + geom_boxplot(aes(x = album, y = popularity, fill = album), alpha = 0.4) + geom_jitter(aes(x = album, y= popularity, fill = album), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per Metallica Album") +  theme(axis.text.x = element_blank())
-
-met_plot <- plot_popularity_band(filtered_metallica, album, "Popularity per Metallica Album")
-met_plot
-
-#average danceability
 
 average_danceability_met <- aggregate(danceability ~ album, data = filtered_metallica, FUN = mean)
 # 
@@ -178,7 +166,27 @@ average_danceability_met <- aggregate(danceability ~ album, data = filtered_meta
 
 dance_met <- plot_average_danceability(average_danceability_met, album)
 dance_met
+```
 
+
+Interestingly, the most popular album on average is 72 Seasons. It is followed by Metallica, which has the widest ranging popularity scores among listeners. 
+
+
+```{r}
+
+
+# filtered_metallica %>% mutate(album = factor(album), ) %>% 
+# 
+# ggplot() + geom_boxplot(aes(x = album, y = popularity, fill = album), alpha = 0.4) + geom_jitter(aes(x = album, y= popularity, fill = album), size =1, alpha =0.8) + theme_minimal() + labs (x = "Album", y = "Popularity", title = "Popularity per Metallica Album") +  theme(axis.text.x = element_blank())
+
+met_plot <- plot_popularity_band(filtered_metallica, album, "Popularity per Metallica Album")
+met_plot
+```
+
+
+Similar to that of coldplay, Metallica has a positive correlation between danceability and popularity. The breakdown among albums is also tabled below. 
+
+```{r}
 #look at correlation
 Corr <- 
 filtered_metallica %>% 
@@ -209,28 +217,34 @@ source("code/create_corr.R")
 met <- create_corr(filtered_metallica, popularity, danceability, "Correlation between danceability and popularity")
 
 met
+```
 
-subset_data <- metallica %>%
-  filter(album %in% c("Some Kind Of Monster", "Some Kind Of Monster (Live)"))
+When comparing the studio and live version for Some Kind of Monster, the average energy is the same. This show Metallica puts in just as much effort at the shows as in the studio albums. Legends!
 
-average_energy <- aggregate(energy ~ album, data = subset_data, FUN = mean)
+```{r}
+average_energy <- metallica %>%
+filter(album %in% c("Some Kind Of Monster", "Some Kind Of Monster (Live)")) %>% aggregate(energy ~ album, ., FUN = mean)
 
-
-bar_plot_met <- ggplot(average_energy, aes(x = album, y = energy)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  xlab("Album") +
-  ylab("Average Energy") +
-  ggtitle("Average Energy for Metallica Albums")
+source("code/create_bar_plot.R")
+bar_plot_met <- create_bar_plot(average_energy, album, energy, "Album", "Average Energy", "Average Energy for Metallica Albums")
 bar_plot_met
+
+# bar_plot_met <- ggplot(average_energy, aes(x = album, y = energy)) +
+#   geom_bar(stat = "identity", fill = "steelblue") +
+#   xlab("Album") +
+#   ylab("Average Energy") +
+#   ggtitle("Average Energy for Metallica Albums")
+# bar_plot_met
 
 ```
 
+\newpage
 
-# Broad Music {-}
+# Broad Music Trends {-}
 
 When looking more broadly at the music scene, the 10 most danceable songs on Spotify are listed below. The number one most danceable song in recent history is Leave Me Now by Herbert, receiving a danceability score of 0.986.
 
-```{r table-3, echo=TRUE, message=FALSE, warning=FALSE, results="asis"}
+```{r table-3, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
 Broader_Spotify_Info <- read.csv("data/Broader_Spotify_Info.csv")
 
 top_10_dance_songs <- Broader_Spotify_Info %>%
