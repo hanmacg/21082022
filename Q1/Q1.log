@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.6.11)  17 JUN 2023 20:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.6.11)  17 JUN 2023 21:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -517,8 +517,20 @@ Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
 (c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
-))
-No file Q1.aux.
+)) (./Q1.aux
+
+LaTeX Warning: Label `Figure1' multiply defined.
+
+
+LaTeX Warning: Label `Figure1' multiply defined.
+
+
+LaTeX Warning: Label `Figure2' multiply defined.
+
+
+LaTeX Warning: Label `Figure3' multiply defined.
+
+)
 \openout1 = `Q1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 160.
@@ -587,24 +599,141 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
 (c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx))
 Package hyperref Info: Link coloring ON on input line 160.
+(./Q1.out) (./Q1.out)
 \@outlinefile=\write4
 \openout4 = `Q1.out'.
 
-! I can't write on file `Q1.pdf'.
-(Press Enter to retry, or Control-Z to exit; default file extension is `.pdf')
-Please type another file name for output
-! Emergency stop.
-<to be read again> 
-                   \edef 
-l.160 \begin{document}
-                       
-Here is how much of TeX's memory you used:
- 15794 strings out of 477694
- 291594 string characters out of 5829462
- 1852753 words of memory out of 5000000
- 36103 multiletter control sequences out of 15000+600000
- 516677 words of font info for 36 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 75i,1n,79p,539b,95s stack positions out of 10000i,1000n,20000p,200000b,200000s
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 198.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 198.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 198.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 198.
+(c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 198.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 198.
+<Q1_files/figure-latex/Figure1-1.png, id=28, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure1-1.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure1-1.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure1-1.png  used on input line 256.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+<Q1_files/figure-latex/Figure1-2.png, id=29, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure1-2.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure1-2.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure1-2.png  used on input line 264.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[1
 
-!  ==> Fatal error occurred, no output PDF file produced!
+
+{c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
+<Q1_files/figure-latex/Figure1-3.png, id=48, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure1-3.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure1-3.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure1-3.png  used on input line 272.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[2 <./Q1_files/figure-latex/Figure1-1.png> <./Q1_files/figure-latex/Figure1-2.png>]
+<Q1_files/figure-latex/Figure2-1.png, id=65, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure2-1.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure2-1.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure2-1.png  used on input line 305.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+<Q1_files/figure-latex/Figure2-2.png, id=66, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure2-2.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure2-2.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure2-2.png  used on input line 313.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[3 <./Q1_files/figure-latex/Figure1-3.png>]
+<Q1_files/figure-latex/Figure3-1.png, id=78, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure3-1.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure3-1.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure3-1.png  used on input line 327.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+<Q1_files/figure-latex/Figure3-2.png, id=79, 433.62pt x 216.81pt>
+File: Q1_files/figure-latex/Figure3-2.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure3-2.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure3-2.png  used on input line 335.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[4 <./Q1_files/figure-latex/Figure2-1.png> <./Q1_files/figure-latex/Figure2-2.png>]
+<Q1_files/figure-latex/Figure4-1.png, id=88, 433.62pt x 289.08pt>
+File: Q1_files/figure-latex/Figure4-1.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure4-1.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure4-1.png  used on input line 356.
+(pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
+[5 <./Q1_files/figure-latex/Figure3-1.png> <./Q1_files/figure-latex/Figure3-2.png>]
+<Q1_files/figure-latex/Figure5-1.png, id=98, 433.62pt x 289.08pt>
+File: Q1_files/figure-latex/Figure5-1.png Graphic file (type png)
+<use Q1_files/figure-latex/Figure5-1.png>
+Package pdftex.def Info: Q1_files/figure-latex/Figure5-1.png  used on input line 370.
+(pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
+[6 <./Q1_files/figure-latex/Figure4-1.png>]
+<Q1_files/figure-latex/unnamed-chunk-2-1.pdf, id=105, 433.62pt x 361.35pt>
+File: Q1_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
+<use Q1_files/figure-latex/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: Q1_files/figure-latex/unnamed-chunk-2-1.pdf  used on input line 386.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+[7 <./Q1_files/figure-latex/Figure5-1.png>]
+<Q1_files/figure-latex/unnamed-chunk-3-1.pdf, id=113, 433.62pt x 361.35pt>
+File: Q1_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
+<use Q1_files/figure-latex/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: Q1_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 396.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+[8 <./Q1_files/figure-latex/unnamed-chunk-2-1.pdf>] [9 <./Q1_files/figure-latex/unnamed-chunk-3-1.pdf>] [10]
+No file Q1.bbl.
+(./Q1.aux)
+ ***********
+LaTeX2e <2023-06-01>
+L3 programming layer <2023-06-05>
+ ***********
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `Q1.out' has not changed.
+(rerunfilecheck)             Checksum: 7F798861A655CF11E57E921528E025E0;1274.
+ ) 
+Here is how much of TeX's memory you used:
+ 16219 strings out of 477694
+ 302063 string characters out of 5829462
+ 1859753 words of memory out of 5000000
+ 36431 multiletter control sequences out of 15000+600000
+ 568339 words of font info for 73 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 75i,12n,79p,539b,924s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/Users/hanna/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
+Output written on Q1.pdf (10 pages, 393700 bytes).
+PDF statistics:
+ 192 PDF objects out of 1000 (max. 8388607)
+ 136 compressed objects within 2 object streams
+ 33 named destinations out of 1000 (max. 500000)
+ 104 words of extra memory for PDF output out of 10000 (max. 10000000)
+
