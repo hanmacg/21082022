@@ -1,5 +1,5 @@
 ---
-title: "21082022_Q2"
+title: "UK Weather Report"
 author: "H MacGinty"
 date: "June 2023"
 # date: "`r Sys.Date()`"
@@ -16,7 +16,7 @@ output:
     # change to true for a self-contained document, but it'll be a litte slower for Pandoc to render
     self_contained: TRUE
 abstract: |
-    This is my abstract for question 2....
+    In sum, the weather in London, and the UK in general, is terrible.
 
 ---
 
@@ -28,10 +28,12 @@ pacman::p_load(modelsummary, gt, knitr, kableExtra, tidyverse)
 \newpage
 
 # Introduction {-}
- I must convince my freind to stay in Cape Town and not move to London.
+ 
+I must convince my friend to stay in Cape Town and not move to London based on how awful the weather is there. We all know that Cape Town has the best climate which makes it so difficult to live anywhere else. 
 
 # Data  {-}
-
+I
+have data on both London and the UK in general. I first examine London before assessing the overall weather in the UK.
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
@@ -53,13 +55,7 @@ UK$DATE <- as.Date(paste0(UK$DATE, "-01"), format = "%Y-%m-%d")
 
 Firstly, I examine data on London specifically, as this is likely where my friend would live and work. 
 
-From the first plot, we see that London is super rainy. In the last year  of the available data (2019), it has rained every month. In October 2019, it rained almost 90mm. Even in June, London's summer, it rained almost 80 mm. 
-
-
-The second plot looks at cloud cover. It is never not cloudy in London. 
-
-
-Thirdly, it is cold! In some months of the year, the average minimum temperature is below 0 degrees. 
+From the first plot, we see that London is super rainy. In the last year  of the available data (2019), it has rained every month. In October 2019, it rained almost 90mm. Even in June, London's summer, it rained almost 80 mm. This would not happen in Cape Town.
 
 ```{r }
 ggplot(data = london_weather, aes(x = date)) +
@@ -115,8 +111,11 @@ source("code/plot_monthly_data.R")
 precip <- plot_monthly_data(monthly_precipitation, total_precipitation, " Total Precipitation")
 
 precip
+```
 
+The second plot looks at cloud cover. It is never not cloudy in London. How could you leave sunny South Africa?
 
+```{r }
 #cloud cover
 london$date <- as.Date(london$date, format = "%Y%m%d")
 
@@ -127,8 +126,6 @@ london_filtered <- london[london$date >= as.Date("2019-01-01"), ]
 monthly_cloudy <- london_filtered %>%
   group_by(month) %>%
   summarize(avg_cloud = mean(cloud_cover, na.rm = TRUE))
-
-
 
 
 # ggplot(data = monthly_cloudy, aes(x = month, y = avg_cloud)) +
@@ -143,8 +140,12 @@ cloud <- plot_monthly_data(monthly_cloudy, avg_cloud, "Average Cloudiness")
 cloud 
 
 #Even in summer it is super cloudy
+```
+
+Thirdly, it is cold! In some months of the year, the average minimum temperature is below 0 degrees. 
 
 
+```{r }
 monthly_min_temp <- london_filtered %>%
   group_by(month) %>%
   summarize(min_temp = min(min_temp, na.rm = TRUE))
@@ -163,16 +164,16 @@ cold <- plot_monthly_data(monthly_min_temp, min_temp, "Average Minimum Temp")
 cold
 ```
 
-I have also includede some tables for my friend to see how miserable the wather is in London.
+I have also included some tables for my friend to see how miserable the weather is in London.
+
+The average temperature is around 12 degrees Celsius each year. It can often be as cold as -5 degree Celsius. 
+
 
 ```{r }
 library(dplyr)
 library(knitr)
 
-# Assuming your dataset is named "london" and the date column is named "date"
-
-# Convert the date column to a Date format if it's not already in the correct format
-
+#creating a year variable
 
 london$year <- lubridate::year(london$date)
 
@@ -185,11 +186,13 @@ summary_stats <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  
 
   )
 
+new_colnames <- c("Year", "Min Temp", "Max Temp", "Avg Temp")
 
-kable(summary_stats, caption = "Stats Table", align = "c") %>%
+colnames(summary_stats) <- new_colnames
+
+kable(summary_stats, caption = "Temperature Range", align = "c") %>%
     kable_styling()
-# 
-# # Print the formatted table
+
 # print(summary_stats)
 
 
@@ -197,15 +200,22 @@ kable(summary_stats, caption = "Stats Table", align = "c") %>%
 # source("code/generate_summary_stats.R")
 # summary_table <- generate_summary_stats(london, "2015-01-01")
 # print(summary_table)
- 
+```
+
+Again, the average rain is substantial and even though there is some sunshine, on average, it is matched by lots of cloudiness. 
+
+```{r }
 summary_stats_sun <- london %>% filter(london$date >= as.Date("2015-01-01"), ) %>%  group_by(year) %>%
   summarize(
     sunshine_mean = mean(sunshine, na.rm = TRUE),
     cloud_cover_mean = mean (cloud_cover, na.rm = TRUE),
     precipitation_mean = max(precipitation, na.rm = TRUE)
   )
+new_colnamess <- c("Year", "Average Sun", "Average Cloudiness", "Average Rain")
 
-kable(summary_stats_sun, caption = "Stats Table", align = "c") %>%
+colnames(summary_stats_sun) <- new_colnamess
+
+kable(summary_stats_sun, caption = "Sunshine, Cloudiness and Rain", align = "c") %>%
     kable_styling()
 # source("code/generate_summary_stats_extra.R")
 # summary_table2 <- generate_summary_stats_extra(london, "2015-01-01")
@@ -223,42 +233,14 @@ kable(summary_stats_sun, caption = "Stats Table", align = "c") %>%
 <!-- \end{align} -->
 <!-- $$ -->
 
-# UK In General {-}
+# UK {-}
 
-Even if my friend does not move to London, it is cold everywhere in the UK. I plotted the yearly average temperature in the UK. The average temperature does not rise above 10-11 degrees. Its been like this since 1880 - its not going to change anytime soon. 
-
-Because it is so cold in the UK, there are days where heating is required (Heating days). From the figure, it can be seen that there are at minimum 220 days a year that require heating. January 2023 got off to a cold start, where everyday required heating (making the graph spike at the end). Regardless, There are sometimes over 300 days of the year which require heating.
+Even if my friend does not move to London, it is cold everywhere in the UK. I plotted the yearly average temperature in the UK. The average temperature does not rise above 10-11 degrees. It has been like this since 1880 - its not going to change anytime soon. 
 
 ```{r}
 
-# ggplot(data = UK, aes(x = DATE, y = HTDD)) +
-#   geom_line(color = "red", size = 1) +
-#   xlab("Date") +
-#   ylab("Heating Degree Days (HDD)") +
-#   ggtitle("Heating Degree Days in UK") +
-#   theme_minimal()
-# 
-# ggplot(data = UK, aes(x = DATE, y = TAVG)) +
-#   geom_line(color = "red", size = 1) +
-#   xlab("Date") +
-#   ylab("Heating Degree Days (HDD)") +
-#   ggtitle("Heating Degree Days in UK") +
-#   theme_minimal()
 
-
-# UK_quarterly <- UK %>%
-#   group_by(quarter = lubridate::quarter(DATE), year = lubridate::year(DATE)) %>%
-#   summarize(average_temperature = mean(TAVG, na.rm = TRUE))
-# 
-# 
-# ggplot(data = UK_quarterly, aes(x = year, y = average_temperature)) +
-#   geom_line(color = "red", size = 1) +
-#   xlab("Year") +
-#   ylab("Average Temperature") +
-#   ggtitle("Quarterly Average Temperature in UK") +
-#   theme_minimal()
-
-#make data yearly - as you can see average temperatures since 1880 are very low. On Average, the temparature is below 11 degrees Celcius. 
+#make data yearly - as you can see average temperatures since 1880 are very low. On Average, the temperature is below 11 degrees Celsius. 
 
 UK_yearly_temp <- UK %>%
   group_by(year = lubridate::year(DATE)) %>%
@@ -275,7 +257,11 @@ UK_yearly_temp <- UK %>%
 source("code/plot_yearly_data.R")
 temp <- plot_yearly_data(UK_yearly_temp, average_temperature, "Average Temperature", "Yearly Average Temperature in UK")
 temp
+```
 
+Because it is so cold in the UK, there are days where heating is required (Heating days). From the figure, it can be seen that there are at minimum 220 days a year that require heating. January 2023 got off to a cold start, where everyday required heating (making the graph spike at the end). Regardless, there are sometimes over 300 days of the year which require heating.
+
+```{r}
 UK_yearly_heat <- UK %>%
   group_by(year = lubridate::year(DATE)) %>% summarize(average_heat = mean(HTDD, na.rm = TRUE))
 
@@ -292,9 +278,9 @@ heat
 ```
 
 
-\newpage
+# Conclusion {-}
 
-
+The UK is a terrible place to move to if one dislikes the cold, lack of sunshine, and rain.
 
 
 
